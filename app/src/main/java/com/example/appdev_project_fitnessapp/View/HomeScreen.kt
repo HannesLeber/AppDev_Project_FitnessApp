@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -106,7 +105,7 @@ fun HomeScreen(navController: NavHostController){
                     .fillMaxSize()
                 ) {
                     item{
-                        lazyColumnItem(stringResource(id = R.string.strength_training), Icons.Default.FitnessCenter)
+                        homePageNavigationItem(stringResource(id = R.string.strength_training), Icons.Default.FitnessCenter)
                     }
                     //TODO: add other items
                 }
@@ -121,7 +120,7 @@ fun HomeScreen(navController: NavHostController){
 
 
 @Composable
-fun lazyColumnItem(title:String, icon: ImageVector){
+fun homePageNavigationItem(title:String, icon: ImageVector){
     Box(
         //TODO: make clickable and add navigation on click
         modifier = Modifier
