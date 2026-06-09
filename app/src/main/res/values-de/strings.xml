@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AppDev_Project_FitnessApp</string>
     <string name="home">Home</string>
     <string name="fitness_app">Fitness App</string>
-    <string name="strength_training">Strength Training</string>
+    <string name="strength_training">Krafttraining</string>
+
 </resources>
