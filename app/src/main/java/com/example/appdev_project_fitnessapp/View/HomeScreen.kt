@@ -23,7 +23,9 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.example.appdev_project_fitnessapp.R
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
@@ -42,7 +44,7 @@ fun HomeScreen(navController: NavHostController){
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Navigation", modifier = Modifier.padding(16.dp))
                 NavigationDrawerItem(
-                    label = { Text("Home") },
+                    label = { Text("${stringResource(id = R.string.home)}") },
                     selected = true,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -54,7 +56,7 @@ fun HomeScreen(navController: NavHostController){
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
                 NavigationDrawerItem(
-                    label = { Text("Strenght Training") },
+                    label = { Text("${stringResource(id = R.string.strength_training)}") },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -85,7 +87,7 @@ fun HomeScreen(navController: NavHostController){
             }
         ) { innerPadding ->
             //TODO: add content
-            Text("Home Screen")
+            Text(stringResource(id = R.string.home))
 
         }
 
