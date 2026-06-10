@@ -29,7 +29,7 @@ data class Exercise(
 )
 
 @Entity
-data class Set(
+data class ExerciseSet(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "reps") var reps: Int,
     @ColumnInfo(name = "weight") var weight: Double,

@@ -1,5 +1,6 @@
 package com.example.appdev_project_fitnessapp.Model
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -82,21 +83,21 @@ interface ExerciseDao {
 
 @Dao
 interface SetDao {
-    @Query("SELECT * FROM set")
-    suspend fun getAll(): List<Set>
+    @Query("SELECT * FROM exerciseSet")
+    suspend fun getAll(): List<ExerciseSet>
 
-    @Query("SELECT * FROM set WHERE id IN (:setIds)")
-    suspend fun loadAllByIds(setIds: IntArray): List<Set>
+    @Query("SELECT * FROM exerciseSet WHERE id IN (:setIds)")
+    suspend fun loadAllByIds(setIds: IntArray): List<ExerciseSet>
 
-    @Query("SELECT * FROM set WHERE id = :id")
-    suspend fun findById(id: Int): Set
-
-    @Insert
-    suspend fun insert(set: Set)
+    @Query("SELECT * FROM exerciseSet WHERE id = :id")
+    suspend fun findById(id: Int): ExerciseSet
 
     @Insert
-    suspend fun insertAll(vararg sets: Set)
+    suspend fun insert(set: ExerciseSet)
+
+    @Insert
+    suspend fun insertAll(vararg sets: ExerciseSet)
 
     @Delete
-    suspend fun delete(set: Set)
+    suspend fun delete(set: ExerciseSet)
 }
