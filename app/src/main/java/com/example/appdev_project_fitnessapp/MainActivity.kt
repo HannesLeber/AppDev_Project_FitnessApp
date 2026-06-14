@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.appdev_project_fitnessapp.View.HomeScreen
-import com.example.appdev_project_fitnessapp.View.strengthTrainingView
+import com.example.appdev_project_fitnessapp.View.StrengthTrainingView
 import com.example.appdev_project_fitnessapp.ui.theme.AppDev_Project_FitnessAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +38,6 @@ fun AppNavigation(){
     NavHost(navController, startDestination = "home") {
         //TODO: add screens
         composable("home") { HomeScreen(navController) }
-        composable("strengthTraining") { strengthTrainingView(navController) }
+        composable("strengthTraining") { StrengthTrainingView(navController) }
     }
 }

@@ -1,11 +1,19 @@
 package com.example.appdev_project_fitnessapp.View
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -23,6 +31,8 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.appdev_project_fitnessapp.R
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -87,10 +97,49 @@ fun HomeScreen(navController: NavHostController){
             }
         ) { innerPadding ->
             //TODO: add content
-            Text(stringResource(id = R.string.home))
+            Column(modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+            ) {
+                //Text("${stringResource(id = R.string.home)}")
+                LazyColumn(modifier = Modifier
+                    .fillMaxSize()
+                ) {
+                    item{
+                        homePageNavigationItem(stringResource(id = R.string.strength_training), Icons.Default.FitnessCenter, onClick = {
+                            scope.launch { drawerState.close() }
+                            navController.navigate("strengthTraining")
+                        })
+                    }
+                    //TODO: add other items
+                }
+
+            }
 
         }
 
     }
 
+}
+
+
+@Composable
+fun homePageNavigationItem(title:String, icon: ImageVector, onClick: () -> Unit = {}){
+    Box(
+        //TODO: make clickable and add navigation on click
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp )
+            .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
+            .padding(10.dp)
+            .height(30.dp)
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        contentAlignment = androidx.compose.ui.Alignment.Center,
+    ){
+        Row(){
+            Icon(icon, contentDescription = null)
+            Spacer(modifier = Modifier.width(5.dp))
+            Text(title)
+        }
+    }
 }
