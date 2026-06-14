@@ -1,6 +1,7 @@
 package com.example.appdev_project_fitnessapp.View
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -105,7 +106,10 @@ fun HomeScreen(navController: NavHostController){
                     .fillMaxSize()
                 ) {
                     item{
-                        homePageNavigationItem(stringResource(id = R.string.strength_training), Icons.Default.FitnessCenter)
+                        homePageNavigationItem(stringResource(id = R.string.strength_training), Icons.Default.FitnessCenter, onClick = {
+                            scope.launch { drawerState.close() }
+                            navController.navigate("strengthTraining")
+                        })
                     }
                     //TODO: add other items
                 }
@@ -120,7 +124,7 @@ fun HomeScreen(navController: NavHostController){
 
 
 @Composable
-fun homePageNavigationItem(title:String, icon: ImageVector){
+fun homePageNavigationItem(title:String, icon: ImageVector, onClick: () -> Unit = {}){
     Box(
         //TODO: make clickable and add navigation on click
         modifier = Modifier
@@ -128,7 +132,8 @@ fun homePageNavigationItem(title:String, icon: ImageVector){
             .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
             .padding(10.dp)
             .height(30.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         contentAlignment = androidx.compose.ui.Alignment.Center,
     ){
         Row(){
