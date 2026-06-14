@@ -53,6 +53,8 @@ fun StrengthTrainingView(navController: NavHostController, model: StrengthTraini
 
         if (trainingSessions.isEmpty()){
             model.addTrainingSession(TrainingSession(name = "Test", doneExercises = listOf(), date = Date()))
+            model.addTrainingSession(TrainingSession(name = "Test2", doneExercises = listOf(), date = Date()))
+            model.addTrainingSession(TrainingSession(name = "Test3", doneExercises = listOf(), date = Date()))
         }
     }
 
