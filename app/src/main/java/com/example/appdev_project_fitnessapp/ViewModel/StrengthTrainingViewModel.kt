@@ -25,13 +25,13 @@ class StrengthTrainingViewModel(
     private val setDao: SetDao
     ) : ViewModel() {
 
-    var trainingSessions = mutableStateListOf<TrainingSession>()
+    var trainingSessions = mutableStateListOf<TrainingSession?>()
     var currentTrainingSession by mutableStateOf<TrainingSession?>(null)
-    var doneExercises = mutableStateListOf<DoneExercise>()
+    var doneExercises = mutableStateListOf<DoneExercise?>()
     var currentDoneExercise by mutableStateOf<DoneExercise?>(null)
-    var exercises = mutableStateListOf<Exercise>()
+    var exercises = mutableStateListOf<Exercise?>()
     var currentExercise by mutableStateOf<Exercise?>(null)
-    var sets = mutableStateListOf<ExerciseSet>()
+    var sets = mutableStateListOf<ExerciseSet?>()
 
 
     //region TrainingSession
@@ -47,21 +47,23 @@ class StrengthTrainingViewModel(
         }
     }
 
-    fun insertTrainingSession(trainingSession: TrainingSession){
+    fun addTrainingSession(trainingSession: TrainingSession){
         viewModelScope.launch {
             trainingSessionDao.insert(trainingSession)
         }
+        trainingSessions.add(trainingSession)
     }
 
     fun deleteTrainingSession(trainingSession: TrainingSession){
         viewModelScope.launch {
             trainingSessionDao.delete(trainingSession)
         }
+        trainingSessions.remove(trainingSession)
     }
 
-    fun updateTrainingSession(trainingSession: TrainingSession){
+    private fun updateTrainingSession(trainingSession: TrainingSession){
         viewModelScope.launch {
-            trainingSessionDao.delete(trainingSession)
+            trainingSessionDao.delete(trainingSessionDao.findById(trainingSession.id))
             trainingSessionDao.insert(trainingSession)
         }
     }
