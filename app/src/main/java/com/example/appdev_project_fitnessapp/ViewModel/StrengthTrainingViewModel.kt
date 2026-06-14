@@ -3,11 +3,13 @@ package com.example.appdev_project_fitnessapp.ViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
+import com.example.appdev_project_fitnessapp.Model.AppDatabase
 import com.example.appdev_project_fitnessapp.Model.DoneExercise
 import com.example.appdev_project_fitnessapp.Model.DoneExerciseDao
 import com.example.appdev_project_fitnessapp.Model.Exercise
@@ -161,5 +163,31 @@ class StrengthTrainingViewModel(
         }
     }
     //endregion
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+                // 1. Hole die Application aus den extras
+                val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+
+                // 2. Hole die Datenbank-Instanz
+                val database = AppDatabase.getDatabase(application)
+
+                // 3. Gib die DAOs der Datenbank an das ViewModel weiter
+                return StrengthTrainingViewModel(
+                    trainingSessionDao = database.trainingSessionDao(),
+                    doneExerciseDao = database.doneExerciseDao(),
+                    exerciseDao = database.exerciseDao(),
+                    setDao = database.setDao()
+                ) as T
+            }
+        }
+    }
+
 }
+
+
+
+
 
