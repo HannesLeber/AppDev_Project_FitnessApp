@@ -1,6 +1,5 @@
 package com.example.appdev_project_fitnessapp.Model
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -9,19 +8,19 @@ import java.util.Date
 
 @Dao
 interface TrainingSessionDao {
-    @Query("SELECT * FROM trainingSession")
+    @Query("SELECT * FROM TrainingSession")
     suspend fun getAll(): List<TrainingSession>
 
-    @Query("SELECT * FROM trainingSession WHERE id IN (:trainingSessionIds)")
+    @Query("SELECT * FROM TrainingSession WHERE id IN (:trainingSessionIds)")
     suspend fun loadAllByIds(trainingSessionIds: IntArray): List<TrainingSession>
 
-    @Query("SELECT * FROM trainingSession WHERE id = :id")
+    @Query("SELECT * FROM TrainingSession WHERE id = :id")
     suspend fun findById(id: Int): TrainingSession
 
-    @Query("SELECT * FROM trainingSession WHERE trainingName = :name")
+    @Query("SELECT * FROM TrainingSession WHERE trainingName = :name")
     suspend fun findByName(name: String): List<TrainingSession>
 
-    @Query("SELECT * FROM trainingSession WHERE trainingDate LIKE :date")
+    @Query("SELECT * FROM TrainingSession WHERE trainingDate = :date")
     suspend fun findByDate(date: Date): List<TrainingSession>
 
     @Insert
@@ -36,14 +35,13 @@ interface TrainingSessionDao {
 
 @Dao
 interface DoneExerciseDao {
-    @Query("SELECT * FROM doneExercise")
+    @Query("SELECT * FROM DoneExercise")
     suspend fun getAll(): List<DoneExercise>
 
-    @Query("SELECT * FROM doneExercise WHERE id IN (:doneExerciseIds)")
+    @Query("SELECT * FROM DoneExercise WHERE id IN (:doneExerciseIds)")
     suspend fun loadAllByIds(doneExerciseIds: IntArray): List<DoneExercise>
 
-
-    @Query("SELECT * FROM doneExercise WHERE id = :id")
+    @Query("SELECT * FROM DoneExercise WHERE id = :id")
     suspend fun findById(id: Int): DoneExercise
 
     @Insert
@@ -58,16 +56,16 @@ interface DoneExerciseDao {
 
 @Dao
 interface ExerciseDao {
-    @Query("SELECT * FROM exercise")
+    @Query("SELECT * FROM Exercise")
     suspend fun getAll(): List<Exercise>
 
-    @Query("SELECT * FROM exercise WHERE id IN (:exerciseIds)")
+    @Query("SELECT * FROM Exercise WHERE id IN (:exerciseIds)")
     suspend fun loadAllByIds(exerciseIds: IntArray): List<Exercise>
 
-    @Query("SELECT * FROM exercise WHERE id = :id")
+    @Query("SELECT * FROM Exercise WHERE id = :id")
     suspend fun findById(id: Int): Exercise
 
-    @Query("SELECT * FROM exercise WHERE exerciseName = :name")
+    @Query("SELECT * FROM Exercise WHERE exerciseName = :name")
     suspend fun findByName(name: String): List<Exercise>
 
     @Insert
@@ -78,18 +76,17 @@ interface ExerciseDao {
 
     @Delete
     suspend fun delete(exercise: Exercise)
-
 }
 
 @Dao
 interface SetDao {
-    @Query("SELECT * FROM exerciseSet")
+    @Query("SELECT * FROM ExerciseSet")
     suspend fun getAll(): List<ExerciseSet>
 
-    @Query("SELECT * FROM exerciseSet WHERE id IN (:setIds)")
+    @Query("SELECT * FROM ExerciseSet WHERE id IN (:setIds)")
     suspend fun loadAllByIds(setIds: IntArray): List<ExerciseSet>
 
-    @Query("SELECT * FROM exerciseSet WHERE id = :id")
+    @Query("SELECT * FROM ExerciseSet WHERE id = :id")
     suspend fun findById(id: Int): ExerciseSet
 
     @Insert
