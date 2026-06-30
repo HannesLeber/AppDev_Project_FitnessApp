@@ -3,6 +3,7 @@ package com.example.appdev_project_fitnessapp.Model
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import java.util.Date
 
@@ -24,7 +25,7 @@ interface TrainingSessionDao {
     suspend fun findByDate(date: Date): List<TrainingSession>
 
     @Insert
-    suspend fun insert(trainingSession: TrainingSession)
+    suspend fun insert(trainingSession: TrainingSession) : Long
 
     @Insert
     suspend fun insertAll(vararg trainingSessions: TrainingSession)
@@ -45,7 +46,7 @@ interface DoneExerciseDao {
     suspend fun findById(id: Int): DoneExercise
 
     @Insert
-    suspend fun insert(doneExercise: DoneExercise)
+    suspend fun insert(doneExercise: DoneExercise) : Long
 
     @Insert
     suspend fun insertAll(vararg doneExercises: DoneExercise)
@@ -69,7 +70,7 @@ interface ExerciseDao {
     suspend fun findByName(name: String): List<Exercise>
 
     @Insert
-    suspend fun insert(exercise: Exercise)
+    suspend fun insert(exercise: Exercise) : Long
 
     @Insert
     suspend fun insertAll(vararg exercises: Exercise)
@@ -90,11 +91,23 @@ interface SetDao {
     suspend fun findById(id: Int): ExerciseSet
 
     @Insert
-    suspend fun insert(set: ExerciseSet)
+    suspend fun insert(set: ExerciseSet) : Long
 
     @Insert
     suspend fun insertAll(vararg sets: ExerciseSet)
 
     @Delete
     suspend fun delete(set: ExerciseSet)
+}
+
+@Dao
+interface TrainingTemplateDao {
+    @Query("SELECT * FROM TrainingTemplate")
+    suspend fun getAll(): List<TrainingTemplate>
+
+    @Insert
+    suspend fun insert(template: TrainingTemplate): Long
+
+    @Delete
+    suspend fun delete(template: TrainingTemplate)
 }
