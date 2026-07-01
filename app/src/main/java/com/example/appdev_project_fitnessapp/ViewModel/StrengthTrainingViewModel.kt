@@ -165,29 +165,38 @@ class StrengthTrainingViewModel(
     //endregion
 
     companion object {
+        @Volatile
+        private var instance: StrengthTrainingViewModel? = null
+
+        fun getInstance(
+            trainingSessionDao: TrainingSessionDao,
+            doneExerciseDao: DoneExerciseDao,
+            exerciseDao: ExerciseDao,
+            setDao: SetDao
+        ): StrengthTrainingViewModel {
+            return instance ?: synchronized(this) {
+                instance ?: StrengthTrainingViewModel(
+                    trainingSessionDao,
+                    doneExerciseDao,
+                    exerciseDao,
+                    setDao
+                ).also { instance = it }
+            }
+        }
+
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                // 1. Hole die Application aus den extras
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-
-                // 2. Hole die Datenbank-Instanz
                 val database = AppDatabase.getDatabase(application)
 
-                // 3. Gib die DAOs der Datenbank an das ViewModel weiter
-                return StrengthTrainingViewModel(
-                    trainingSessionDao = database.trainingSessionDao(),
-                    doneExerciseDao = database.doneExerciseDao(),
-                    exerciseDao = database.exerciseDao(),
-                    setDao = database.setDao()
+                return getInstance(
+                    database.trainingSessionDao(),
+                    database.doneExerciseDao(),
+                    database.exerciseDao(),
+                    database.setDao()
                 ) as T
             }
         }
     }
-
 }
-
-
-
-
-
