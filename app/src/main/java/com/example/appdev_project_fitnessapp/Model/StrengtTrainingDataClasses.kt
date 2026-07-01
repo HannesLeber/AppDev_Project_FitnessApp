@@ -35,3 +35,10 @@ data class ExerciseSet(
     @ColumnInfo(name = "weight") var weight: Double,
     @ColumnInfo(name = "warmUpSet") var warmupSet: Boolean
 )
+
+@Entity
+data class TrainingTemplate(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "templateName") var name: String,
+    @ColumnInfo(name = "exerciseIds") var exerciseIds: List<Int>
+)
