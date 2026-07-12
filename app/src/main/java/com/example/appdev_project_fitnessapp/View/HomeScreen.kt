@@ -77,7 +77,7 @@ fun HomeScreen(navController: NavHostController){
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
                 NavigationDrawerItem(
-                    label = { Text("${stringResource(id = R.string.notifications)}") },
+                    label = { Text("${stringResource(id = R.string.reminders)}") },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
