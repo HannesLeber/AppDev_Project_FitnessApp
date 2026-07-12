@@ -48,7 +48,7 @@ fun ReminderScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(id = R.string.notifications)) },
+                title = { Text(stringResource(id = R.string.reminders)) },
                 navigationIcon = {
                     if (navController.previousBackStackEntry != null) {
                         //Back-Button (go one page back (page = Entry in the backstack))
