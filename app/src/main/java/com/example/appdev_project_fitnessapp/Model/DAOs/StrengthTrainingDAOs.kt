@@ -1,10 +1,15 @@
-package com.example.appdev_project_fitnessapp.Model
+package com.example.appdev_project_fitnessapp.Model.DAOs
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.appdev_project_fitnessapp.Model.DataClasses.DoneExercise
+import com.example.appdev_project_fitnessapp.Model.DataClasses.Exercise
+import com.example.appdev_project_fitnessapp.Model.DataClasses.ExerciseSet
+import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
+import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
 import java.util.Date
 
 //TODO: Update-Funktionen schreiben! Aber nicht löschen und dann neu hinzufügen, sonst Problem mit den IDs

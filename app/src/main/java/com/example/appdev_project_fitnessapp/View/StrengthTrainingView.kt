@@ -34,7 +34,6 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,16 +43,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.appdev_project_fitnessapp.Model.TrainingSession
+import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
 import com.example.appdev_project_fitnessapp.R
 import com.example.appdev_project_fitnessapp.ViewModel.StrengthTrainingViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import java.lang.Thread.sleep
-import java.util.Date
 
 
 @OptIn(ExperimentalMaterial3Api::class)

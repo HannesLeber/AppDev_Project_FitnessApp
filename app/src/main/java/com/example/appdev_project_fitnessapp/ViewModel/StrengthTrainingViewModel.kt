@@ -9,14 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.appdev_project_fitnessapp.Model.AppDatabase
-import com.example.appdev_project_fitnessapp.Model.DoneExercise
-import com.example.appdev_project_fitnessapp.Model.DoneExerciseDao
-import com.example.appdev_project_fitnessapp.Model.Exercise
-import com.example.appdev_project_fitnessapp.Model.ExerciseDao
-import com.example.appdev_project_fitnessapp.Model.ExerciseSet
-import com.example.appdev_project_fitnessapp.Model.SetDao
-import com.example.appdev_project_fitnessapp.Model.TrainingSession
-import com.example.appdev_project_fitnessapp.Model.TrainingSessionDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.DoneExercise
+import com.example.appdev_project_fitnessapp.Model.DAOs.DoneExerciseDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.Exercise
+import com.example.appdev_project_fitnessapp.Model.DAOs.ExerciseDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.ExerciseSet
+import com.example.appdev_project_fitnessapp.Model.DAOs.SetDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
+import com.example.appdev_project_fitnessapp.Model.DAOs.TrainingSessionDao
 import kotlinx.coroutines.launch
 
 class StrengthTrainingViewModel(
