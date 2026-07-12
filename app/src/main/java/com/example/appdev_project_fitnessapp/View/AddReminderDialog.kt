@@ -61,6 +61,7 @@ fun AddReminderDialog(
 
                     OutlinedTextField(
                         modifier = Modifier
+                            .menuAnchor()
                             .fillMaxWidth(),
                         value = unit,
                         onValueChange = {},
