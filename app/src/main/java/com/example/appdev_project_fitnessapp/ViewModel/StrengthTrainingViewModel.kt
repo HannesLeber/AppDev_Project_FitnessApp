@@ -4,20 +4,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.appdev_project_fitnessapp.Model.AppDatabase
-import com.example.appdev_project_fitnessapp.Model.DoneExercise
-import com.example.appdev_project_fitnessapp.Model.DoneExerciseDao
-import com.example.appdev_project_fitnessapp.Model.Exercise
-import com.example.appdev_project_fitnessapp.Model.ExerciseDao
-import com.example.appdev_project_fitnessapp.Model.ExerciseSet
-import com.example.appdev_project_fitnessapp.Model.SetDao
-import com.example.appdev_project_fitnessapp.Model.TrainingSession
-import com.example.appdev_project_fitnessapp.Model.TrainingSessionDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.DoneExercise
+import com.example.appdev_project_fitnessapp.Model.DAOs.DoneExerciseDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.Exercise
+import com.example.appdev_project_fitnessapp.Model.DAOs.ExerciseDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.ExerciseSet
+import com.example.appdev_project_fitnessapp.Model.DAOs.SetDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
+import com.example.appdev_project_fitnessapp.Model.DAOs.TrainingSessionDao
 import kotlinx.coroutines.launch
 
 class StrengthTrainingViewModel(
@@ -27,46 +26,53 @@ class StrengthTrainingViewModel(
     private val setDao: SetDao
     ) : ViewModel() {
 
-    var trainingSessions = mutableStateListOf<TrainingSession?>()
-    var currentTrainingSession by mutableStateOf<TrainingSession?>(null)
-    var doneExercises = mutableStateListOf<DoneExercise?>()
-    var currentDoneExercise by mutableStateOf<DoneExercise?>(null)
-    var exercises = mutableStateListOf<Exercise?>()
-    var currentExercise by mutableStateOf<Exercise?>(null)
-    var sets = mutableStateListOf<ExerciseSet?>()
+    // Using 'val' for SnapshotStateLists. 
+    // Changes to the content (clear, add) will automatically trigger UI updates
+    // as long as the reference to the list object remains the same.
 
+    val trainingSessions = mutableStateListOf<TrainingSession?>() //val, weil mit den .clear() und .add() funktionen dann die UI aktualisiert wird.
+    var currentTrainingSession by mutableStateOf<TrainingSession?>(null)
+    val doneExercises = mutableStateListOf<DoneExercise?>()
+    var currentDoneExercise by mutableStateOf<DoneExercise?>(null)
+    val exercises = mutableStateListOf<Exercise?>()
+    var currentExercise by mutableStateOf<Exercise?>(null)
+    val sets = mutableStateListOf<ExerciseSet?>()
 
     //region TrainingSession
     fun getAllTrainingSessions(){
         viewModelScope.launch {
-            trainingSessions = trainingSessionDao.getAll().toMutableStateList()
+            val sessions = trainingSessionDao.getAll()
+            trainingSessions.clear()
+            trainingSessions.addAll(sessions)
         }
     }
 
     fun getTrainingSessionByID(id: Int){
         viewModelScope.launch {
             currentTrainingSession = trainingSessionDao.findById(id)
+
         }
     }
 
     fun addTrainingSession(trainingSession: TrainingSession){
         viewModelScope.launch {
             trainingSessionDao.insert(trainingSession)
+            getAllTrainingSessions()
         }
-        trainingSessions.add(trainingSession)
     }
 
     fun deleteTrainingSession(trainingSession: TrainingSession){
         viewModelScope.launch {
             trainingSessionDao.delete(trainingSession)
+            getAllTrainingSessions()
         }
-        trainingSessions.remove(trainingSession)
     }
 
     private fun updateTrainingSession(trainingSession: TrainingSession){
         viewModelScope.launch {
             trainingSessionDao.delete(trainingSessionDao.findById(trainingSession.id))
             trainingSessionDao.insert(trainingSession)
+            getAllTrainingSessions()
         }
     }
     //endregion
@@ -74,7 +80,9 @@ class StrengthTrainingViewModel(
     // region DoneExercise
     fun getAllDoneExercises(){
         viewModelScope.launch {
-            doneExercises = doneExerciseDao.getAll().toMutableStateList()
+            val items = doneExerciseDao.getAll()
+            doneExercises.clear()
+            doneExercises.addAll(items)
         }
     }
 
@@ -87,12 +95,14 @@ class StrengthTrainingViewModel(
     fun insertDoneExercise(doneExercise: DoneExercise){
         viewModelScope.launch {
             doneExerciseDao.insert(doneExercise)
+            getAllDoneExercises()
         }
     }
 
     fun deleteDoneExercise(doneExercise: DoneExercise){
         viewModelScope.launch {
             doneExerciseDao.delete(doneExercise)
+            getAllDoneExercises()
         }
     }
 
@@ -100,6 +110,7 @@ class StrengthTrainingViewModel(
         viewModelScope.launch {
             doneExerciseDao.delete(doneExercise)
             doneExerciseDao.insert(doneExercise)
+            getAllDoneExercises()
         }
     }
     //endregion
@@ -107,7 +118,9 @@ class StrengthTrainingViewModel(
     //region Exercise
     fun getAllExercises(){
         viewModelScope.launch {
-            exercises = exerciseDao.getAll().toMutableStateList()
+            val items = exerciseDao.getAll()
+            exercises.clear()
+            exercises.addAll(items)
         }
     }
 
@@ -120,12 +133,14 @@ class StrengthTrainingViewModel(
     fun insertExercise(exercise: Exercise){
         viewModelScope.launch {
             exerciseDao.insert(exercise)
+            getAllExercises()
         }
     }
 
     fun deleteExercise(exercise: Exercise){
         viewModelScope.launch {
             exerciseDao.delete(exercise)
+            getAllExercises()
         }
     }
 
@@ -133,6 +148,7 @@ class StrengthTrainingViewModel(
         viewModelScope.launch {
             exerciseDao.delete(exercise)
             exerciseDao.insert(exercise)
+            getAllExercises()
         }
     }
     //endregion
@@ -140,7 +156,9 @@ class StrengthTrainingViewModel(
     //region ExerciseSet
     fun getSetsByIDs(ids: List<Int>){
         viewModelScope.launch {
-            sets = setDao.loadAllByIds(ids.toIntArray()).toMutableStateList()
+            val items = setDao.loadAllByIds(ids.toIntArray())
+            sets.clear()
+            sets.addAll(items)
         }
     }
 
@@ -164,30 +182,46 @@ class StrengthTrainingViewModel(
     }
     //endregion
 
+
+    fun loadData(){
+        getAllTrainingSessions()
+        getAllDoneExercises()
+        getAllExercises()
+    }
+
     companion object {
+        @Volatile
+        private var instance: StrengthTrainingViewModel? = null
+
+        fun getInstance(
+            trainingSessionDao: TrainingSessionDao,
+            doneExerciseDao: DoneExerciseDao,
+            exerciseDao: ExerciseDao,
+            setDao: SetDao
+        ): StrengthTrainingViewModel {
+            return instance ?: synchronized(this) {
+                instance ?: StrengthTrainingViewModel(
+                    trainingSessionDao,
+                    doneExerciseDao,
+                    exerciseDao,
+                    setDao
+                ).also { instance = it }
+            }
+        }
+
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-                // 1. Hole die Application aus den extras
                 val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-
-                // 2. Hole die Datenbank-Instanz
                 val database = AppDatabase.getDatabase(application)
 
-                // 3. Gib die DAOs der Datenbank an das ViewModel weiter
-                return StrengthTrainingViewModel(
-                    trainingSessionDao = database.trainingSessionDao(),
-                    doneExerciseDao = database.doneExerciseDao(),
-                    exerciseDao = database.exerciseDao(),
-                    setDao = database.setDao()
+                return getInstance(
+                    database.trainingSessionDao(),
+                    database.doneExerciseDao(),
+                    database.exerciseDao(),
+                    database.setDao()
                 ) as T
             }
         }
     }
-
 }
-
-
-
-
-

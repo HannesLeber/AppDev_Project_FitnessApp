@@ -1,14 +1,21 @@
-package com.example.appdev_project_fitnessapp.Model
+package com.example.appdev_project_fitnessapp.Model.DAOs
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.appdev_project_fitnessapp.Model.DataClasses.DoneExercise
+import com.example.appdev_project_fitnessapp.Model.DataClasses.Exercise
+import com.example.appdev_project_fitnessapp.Model.DataClasses.ExerciseSet
+import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
+import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
 import java.util.Date
 
+//TODO: Update-Funktionen schreiben! Aber nicht löschen und dann neu hinzufügen, sonst Problem mit den IDs
 @Dao
 interface TrainingSessionDao {
-    @Query("SELECT * FROM TrainingSession")
+    @Query("SELECT * FROM TrainingSession ORDER BY id DESC")
     suspend fun getAll(): List<TrainingSession>
 
     @Query("SELECT * FROM TrainingSession WHERE id IN (:trainingSessionIds)")
@@ -35,10 +42,10 @@ interface TrainingSessionDao {
 
 @Dao
 interface DoneExerciseDao {
-    @Query("SELECT * FROM DoneExercise")
+    @Query("SELECT * FROM DoneExercise ORDER BY id DESC")
     suspend fun getAll(): List<DoneExercise>
 
-    @Query("SELECT * FROM DoneExercise WHERE id IN (:doneExerciseIds)")
+    @Query("SELECT * FROM DoneExercise WHERE id IN (:doneExerciseIds) ")
     suspend fun loadAllByIds(doneExerciseIds: IntArray): List<DoneExercise>
 
     @Query("SELECT * FROM DoneExercise WHERE id = :id")
@@ -56,7 +63,7 @@ interface DoneExerciseDao {
 
 @Dao
 interface ExerciseDao {
-    @Query("SELECT * FROM Exercise")
+    @Query("SELECT * FROM Exercise ORDER BY id DESC")
     suspend fun getAll(): List<Exercise>
 
     @Query("SELECT * FROM Exercise WHERE id IN (:exerciseIds)")
@@ -97,4 +104,17 @@ interface SetDao {
 
     @Delete
     suspend fun delete(set: ExerciseSet)
+}
+
+
+@Dao
+interface TrainingTemplateDao {
+    @Query("SELECT * FROM TrainingTemplate")
+    suspend fun getAll(): List<TrainingTemplate>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(template: TrainingTemplate): Long
+
+    @Delete
+    suspend fun delete(template: TrainingTemplate)
 }
