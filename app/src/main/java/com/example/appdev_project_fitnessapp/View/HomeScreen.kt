@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -73,6 +74,16 @@ fun HomeScreen(navController: NavHostController){
                         navController.navigate("strengthTraining")
                     },
                     icon = { Icon(Icons.Default.FitnessCenter, contentDescription = null) },
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
+                NavigationDrawerItem(
+                    label = { Text("${stringResource(id = R.string.notifications)}") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        navController.navigate("reminders")
+                    },
+                    icon = { Icon(Icons.Default.Timer, contentDescription = null) },
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
                 //TODO: add other Items (settings etc.)
