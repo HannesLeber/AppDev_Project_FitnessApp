@@ -5,12 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.appdev_project_fitnessapp.Model.DAOs.DailyStepDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.DoneExerciseDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.ExerciseDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.ReminderDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.SetDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.TrainingSessionDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.TrainingTemplateDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.DailyStepData
 import com.example.appdev_project_fitnessapp.Model.DataClasses.DoneExercise
 import com.example.appdev_project_fitnessapp.Model.DataClasses.Exercise
 import com.example.appdev_project_fitnessapp.Model.DataClasses.ExerciseSet
@@ -25,9 +27,10 @@ import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
         Exercise::class,
         ExerciseSet::class,
         TrainingTemplate::class,
-        Reminder::class
+        Reminder::class,
+        DailyStepData::class
      ],
-        version = 3,
+        version = 4,
         exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -38,6 +41,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun setDao(): SetDao
     abstract fun trainingTemplateDao(): TrainingTemplateDao
     abstract fun reminderDao(): ReminderDao
+    abstract fun dailyStepDao(): DailyStepDao
 
     companion object {
         @Volatile
