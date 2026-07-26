@@ -17,13 +17,16 @@ import com.example.appdev_project_fitnessapp.Model.DataClasses.ExerciseSet
 import com.example.appdev_project_fitnessapp.Model.DAOs.SetDao
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
 import com.example.appdev_project_fitnessapp.Model.DAOs.TrainingSessionDao
+import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
+import com.example.appdev_project_fitnessapp.Model.DAOs.TrainingTemplateDao
 import kotlinx.coroutines.launch
 
 class StrengthTrainingViewModel(
     private val trainingSessionDao: TrainingSessionDao,
     private val doneExerciseDao: DoneExerciseDao,
     private val exerciseDao: ExerciseDao,
-    private val setDao: SetDao
+    private val setDao: SetDao,
+    private val trainingTemplateDao: TrainingTemplateDao
     ) : ViewModel() {
 
     // Using 'val' for SnapshotStateLists. 
@@ -37,6 +40,8 @@ class StrengthTrainingViewModel(
     val exercises = mutableStateListOf<Exercise?>()
     var currentExercise by mutableStateOf<Exercise?>(null)
     val sets = mutableStateListOf<ExerciseSet?>()
+
+    val templates = mutableStateListOf<TrainingTemplate?>()
 
     //region TrainingSession
     fun getAllTrainingSessions(){
@@ -92,11 +97,16 @@ class StrengthTrainingViewModel(
         }
     }
 
-    fun insertDoneExercise(doneExercise: DoneExercise){
+    fun insertDoneExercise(doneExercise: DoneExercise): Int{
+        var id = doneExercises[0]?.id //0 is the last inserted Entry, therefore the latest ID
+        if (id == null){
+            id = 0
+        }
         viewModelScope.launch {
             doneExerciseDao.insert(doneExercise)
             getAllDoneExercises()
         }
+        return id + 1 //id is already taken, the next ID to be used is id+1
     }
 
     fun deleteDoneExercise(doneExercise: DoneExercise){
@@ -130,11 +140,16 @@ class StrengthTrainingViewModel(
         }
     }
 
-    fun insertExercise(exercise: Exercise){
+    fun insertExercise(exercise: Exercise): Int{
+        var id = exercises[0]?.id //0 is the last inserted Entry, therefore the latest ID
+        if (id == null){
+            id = 0
+        }
         viewModelScope.launch {
             exerciseDao.insert(exercise)
             getAllExercises()
         }
+        return id + 1
     }
 
     fun deleteExercise(exercise: Exercise){
@@ -182,6 +197,38 @@ class StrengthTrainingViewModel(
     }
     //endregion
 
+//region Template
+    fun addTemplate(template: TrainingTemplate){
+        viewModelScope.launch {
+            trainingTemplateDao.insert(template)
+        }
+    }
+
+    fun deleteTemplate(template: TrainingTemplate){
+        viewModelScope.launch {
+            trainingTemplateDao.delete(template)
+        }
+    }
+
+    fun updateTemplate(template: TrainingTemplate){
+        viewModelScope.launch {
+            trainingTemplateDao.delete(template)
+            trainingTemplateDao.insert(template)
+        }
+    }
+
+    fun getAllTemplates(){
+        viewModelScope.launch {
+            val temp = trainingTemplateDao.getAll()
+            templates.clear()
+            templates.addAll(temp)
+        }
+    }
+
+
+
+
+    //endregion
 
     fun loadData(){
         getAllTrainingSessions()
@@ -197,14 +244,16 @@ class StrengthTrainingViewModel(
             trainingSessionDao: TrainingSessionDao,
             doneExerciseDao: DoneExerciseDao,
             exerciseDao: ExerciseDao,
-            setDao: SetDao
+            setDao: SetDao,
+            trainingTemplateDao: TrainingTemplateDao
         ): StrengthTrainingViewModel {
             return instance ?: synchronized(this) {
                 instance ?: StrengthTrainingViewModel(
                     trainingSessionDao,
                     doneExerciseDao,
                     exerciseDao,
-                    setDao
+                    setDao,
+                    trainingTemplateDao
                 ).also { instance = it }
             }
         }
@@ -219,7 +268,8 @@ class StrengthTrainingViewModel(
                     database.trainingSessionDao(),
                     database.doneExerciseDao(),
                     database.exerciseDao(),
-                    database.setDao()
+                    database.setDao(),
+                    database.trainingTemplateDao()
                 ) as T
             }
         }

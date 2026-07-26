@@ -39,6 +39,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun trainingTemplateDao(): TrainingTemplateDao
     abstract fun reminderDao(): ReminderDao
 
+
+
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
