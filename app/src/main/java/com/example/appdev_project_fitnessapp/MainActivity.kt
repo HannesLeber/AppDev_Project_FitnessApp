@@ -19,11 +19,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.app.notifications.NotificationHelper
+import com.example.appdev_project_fitnessapp.View.AddNewExerciseView
 import com.example.appdev_project_fitnessapp.View.HomeScreen
 import com.example.appdev_project_fitnessapp.View.StrengthTrainingView
 import com.example.appdev_project_fitnessapp.View.ChooseTemplateView
 import com.example.appdev_project_fitnessapp.View.EditStrengthTrainingSessionView
 import com.example.appdev_project_fitnessapp.View.ReminderScreen
+import com.example.appdev_project_fitnessapp.View.SelectExerciseView
 import com.example.appdev_project_fitnessapp.ViewModel.ReminderViewModel
 import com.example.appdev_project_fitnessapp.ViewModel.StrengthTrainingViewModel
 import com.example.appdev_project_fitnessapp.ui.theme.AppDev_Project_FitnessAppTheme
@@ -68,16 +70,37 @@ fun AppNavigation(
     innerPadding: PaddingValues,
     strengthTrainingViewModel: StrengthTrainingViewModel = viewModel(factory = StrengthTrainingViewModel.Factory),
     reminderViewModel: ReminderViewModel = viewModel(factory = ReminderViewModel.Factory)
-    ){
+    ) {
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = "home") {
         //TODO: add screens
         composable("home") { HomeScreen(navController) }
-        composable("strengthTraining") { StrengthTrainingView(navController, strengthTrainingViewModel) }
-        composable("chooseTemplate") { ChooseTemplateView(navController, strengthTrainingViewModel) }
-        composable("editStrengthTraining") { EditStrengthTrainingSessionView(navController, strengthTrainingViewModel) }
+        composable("strengthTraining") {
+            StrengthTrainingView(
+                navController,
+                strengthTrainingViewModel
+            )
+        }
+        composable("chooseTemplate") {
+            ChooseTemplateView(
+                navController,
+                strengthTrainingViewModel
+            )
+        }
+        composable("editStrengthTraining") {
+            EditStrengthTrainingSessionView(
+                navController,
+                strengthTrainingViewModel
+            )
+        }
         composable("reminders") { ReminderScreen(navController, reminderViewModel) }
-
+        composable("selectExercise") {
+            SelectExerciseView(
+                navController,
+                strengthTrainingViewModel
+            )
+        }
+        composable("addNewExercise") { AddNewExerciseView(navController, strengthTrainingViewModel) }
     }
 }

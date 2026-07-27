@@ -32,6 +32,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,16 +42,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.appdev_project_fitnessapp.Model.DataClasses.DoneExercise
 import com.example.appdev_project_fitnessapp.Model.DataClasses.Exercise
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
+import com.example.appdev_project_fitnessapp.R
 import com.example.appdev_project_fitnessapp.ViewModel.StrengthTrainingViewModel
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -62,10 +64,18 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
 
     //TODO: add content
     var sessionName by remember { mutableStateOf("") }
-    val selectedExercises = remember { mutableStateListOf<String>() }
+    val selectedExercises = remember { mutableStateListOf<Exercise>() }
     var newExerciseName by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
+    var unknowntrainingString = stringResource(R.string.unknown_training)
 
+
+    LaunchedEffect(Unit, strengthTrainingViewModel.exerciseHasBeenSelected.value) {
+        if (strengthTrainingViewModel.exerciseHasBeenSelected.value) {
+            selectedExercises.add(strengthTrainingViewModel.selectedExercise.value)
+            strengthTrainingViewModel.exerciseHasBeenSelected.value = false
+        }
+    }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -90,17 +100,17 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Neues Training") },
+                title = { Text(stringResource(id = R.string.edit_strength_training)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(id = R.string.back))
                     }
                 },
                 actions = {
                     IconButton(onClick = {
                         scope.launch {
                             val exerciseIds = mutableListOf<Int>()
-                            selectedExercises.forEach { name ->
+                            selectedExercises.forEach { exercise ->
 //                                val id = strengthTrainingViewModel.insertExercise(
 //                                    Exercise(
 //                                        name = name,
@@ -109,13 +119,13 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
 //                                    )
 //                                )
                                 val doneExId = strengthTrainingViewModel.insertDoneExercise(
-                                    DoneExercise(exerciseID = id, sets = listOf())
+                                    DoneExercise(exerciseID = exercise.id, sets = listOf())
                                 )
                                 exerciseIds.add(doneExId.toInt())
                             }
 
                             val session = TrainingSession(
-                                name = sessionName.ifBlank { "Unbenanntes Training" },
+                                name = sessionName.ifBlank { unknowntrainingString },
                                 doneExercises = exerciseIds,
                                 date = Date()
                             )
@@ -123,7 +133,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                             navController.popBackStack()
                         }
                     }) {
-                        Icon(Icons.Default.Save, contentDescription = "Speichern")
+                        Icon(Icons.Default.Save, contentDescription = stringResource(id = R.string.save))
                     }
                 }
             )
@@ -138,37 +148,31 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
             OutlinedTextField(
                 value = sessionName,
                 onValueChange = { sessionName = it },
-                label = { Text("Name der Session") },
+                label = { Text(stringResource(R.string.name_of_session)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Übungen hinzufügen", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(id = R.string.exercises), style = MaterialTheme.typography.titleMedium)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                OutlinedTextField(
-                    value = newExerciseName,
-                    onValueChange = { newExerciseName = it },
-                    label = { Text("Übungsname") },
-                    modifier = Modifier.weight(1f)
-                )
+                Text(stringResource(id = R.string.add_new_exercise))
                 IconButton(onClick = {
-                    if (newExerciseName.isNotBlank()) {
-                        selectedExercises.add(newExerciseName)
-                        newExerciseName = ""
-                    }
+                    navController.navigate("selectExercise")
+
                 }) {
-                    Icon(Icons.Default.Add, contentDescription = "Hinzufügen")
+
+                    Icon(Icons.Default.Add, contentDescription = stringResource(id = R.string.add))
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn(modifier = Modifier.weight(1f)) {
-                items(selectedExercises, key = { it + selectedExercises.indexOf(it) }) { exercise ->
+                items(selectedExercises, key = { it }) { exercise ->
                     val dismissState = rememberSwipeToDismissBoxState(
                         confirmValueChange = {
                             if (it == SwipeToDismissBoxValue.StartToEnd) {
@@ -213,7 +217,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
                             Text(
-                                text = exercise,
+                                text = exercise.name,
                                 modifier = Modifier.padding(16.dp)
                             )
                         }

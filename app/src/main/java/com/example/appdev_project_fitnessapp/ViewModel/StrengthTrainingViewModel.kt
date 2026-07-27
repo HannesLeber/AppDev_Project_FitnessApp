@@ -1,5 +1,6 @@
 package com.example.appdev_project_fitnessapp.ViewModel
 
+import android.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,9 @@ class StrengthTrainingViewModel(
     val exercises = mutableStateListOf<Exercise?>()
     var currentExercise by mutableStateOf<Exercise?>(null)
     val sets = mutableStateListOf<ExerciseSet?>()
+
+    var selectedExercise = mutableStateOf<Exercise>(Exercise(name = "none", prSetID = null, doneExercises = listOf()))
+    var exerciseHasBeenSelected = mutableStateOf(false)
 
     val templates = mutableStateListOf<TrainingTemplate?>()
 
@@ -140,7 +144,7 @@ class StrengthTrainingViewModel(
         }
     }
 
-    fun insertExercise(exercise: Exercise): Int{
+    fun insertExercise(exercise: Exercise, useAsSelectedExercise: Boolean = false): Int{
         var id = exercises[0]?.id //0 is the last inserted Entry, therefore the latest ID
         if (id == null){
             id = 0
@@ -148,6 +152,10 @@ class StrengthTrainingViewModel(
         viewModelScope.launch {
             exerciseDao.insert(exercise)
             getAllExercises()
+        }
+        if (useAsSelectedExercise){
+            selectedExercise.value = exercise
+            exerciseHasBeenSelected.value = true
         }
         return id + 1
     }
