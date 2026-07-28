@@ -1,6 +1,6 @@
 package com.example.appdev_project_fitnessapp.View
 
-import android.R.attr.id
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,77 +50,72 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.example.appdev_project_fitnessapp.Model.DataClasses.DoneExercise
-import com.example.appdev_project_fitnessapp.Model.DataClasses.Exercise
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
 import com.example.appdev_project_fitnessapp.R
 import com.example.appdev_project_fitnessapp.ViewModel.StrengthTrainingViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
-import kotlin.collections.listOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTrainingViewModel: StrengthTrainingViewModel) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    //TODO: add content
     var sessionName by remember { mutableStateOf("") }
-    var selectedExercises = remember { mutableStateListOf<DoneExercise>() }
+    val selectedExercises = remember { mutableStateListOf<DoneExercise>() }
     var selectedExercisesIDs by remember { mutableStateOf(listOf<Int>()) }
-    var newExerciseName by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
-    var unknowntrainingString = stringResource(R.string.unknown_training)
+    val unknowntrainingString = stringResource(R.string.unknown_training)
     val session = strengthTrainingViewModel.currentTrainingSession
 
-    var isNewTrainingSession = false
+    var isNewTrainingSession by remember { mutableStateOf(false) }
 
 
-    LaunchedEffect(Unit, strengthTrainingViewModel.exerciseHasBeenSelected.value) {
+    LaunchedEffect(strengthTrainingViewModel.exerciseHasBeenSelected.value) {
         if (strengthTrainingViewModel.exerciseHasBeenSelected.value) {
-            var doneExercise = DoneExercise(exerciseID = strengthTrainingViewModel.selectedExercise.value!!.id, sets = listOf())
-            var doneExerciseId = strengthTrainingViewModel.insertDoneExercise(doneExercise)
-            doneExercise = strengthTrainingViewModel.getDoneExerciseByID(doneExerciseId)!!
-
+            val selected = strengthTrainingViewModel.selectedExercise.value
+            if (selected != null) {
+                val doneExercise = DoneExercise(exerciseID = selected.id, sets = listOf())
+                val doneExerciseId = strengthTrainingViewModel.insertDoneExercise(doneExercise)
+                val persistedDoneExercise = strengthTrainingViewModel.getDoneExerciseByID(doneExerciseId)
+                if (persistedDoneExercise != null) {
+                    selectedExercises.add(persistedDoneExercise)
+                }
+            }
             strengthTrainingViewModel.exerciseHasBeenSelected.value = false
-        }
-    }
-
-    LaunchedEffect(strengthTrainingViewModel.currentDoneExercise) {
-        if (strengthTrainingViewModel.currentDoneExercise != null) {
-            selectedExercises.add(strengthTrainingViewModel.currentDoneExercise!!)
         }
     }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                //TODO: load state from ViewModel
+                Log.d("Lifecycle", "ON_START")
                 if (strengthTrainingViewModel.currentTrainingSession != null) {
-                    sessionName = session!!.name ?:"None"
-                    selectedExercisesIDs = session.doneExercises
-                    selectedExercisesIDs.forEach { id ->
-                        CoroutineScope(Dispatchers.Default).launch {
-                            strengthTrainingViewModel.getDoneExerciseByID(id) //sets currentDoneExercise to the one with the given id
-                            selectedExercises.add(strengthTrainingViewModel.currentDoneExercise!!)
-                        }
+                    sessionName = session?.name ?:"None"
+                    selectedExercisesIDs = session!!.doneExercises
+                    
+                    selectedExercises.clear()
+                    scope.launch {
+                        val exercises = strengthTrainingViewModel.getDoneExercisesByIDs(selectedExercisesIDs)
+                        selectedExercises.addAll(exercises)
                     }
+                    
+                    Log.d("Lifecycle", "is not new Trainingsession")
                     isNewTrainingSession = false
                 } else{
                     isNewTrainingSession = true
+                    Log.d("Lifecycle", "is new Trainingsession")
                 }
 
-            } else if (event == Lifecycle.Event.ON_STOP) {
-                //TODO: save state into ViewModel/DB
+            }
+            else if (event == Lifecycle.Event.ON_STOP) {
+                Log.d("Lifecycle", "ON_STOP")
             }
         }
 
-        // Add the observer to the lifecycle
         lifecycleOwner.lifecycle.addObserver(observer)
 
-        // When the effect leaves the Composition, remove the observer
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
@@ -142,20 +137,21 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                             val exerciseIds = mutableListOf<Int>()
                             selectedExercises.forEach { exercise ->
                                 val doneExId = strengthTrainingViewModel.insertDoneExercise(
-                                    DoneExercise(exerciseID = exercise.id, sets = listOf())
+                                    DoneExercise(exerciseID = exercise.exerciseID, sets = listOf())
                                 )
                                 exerciseIds.add(doneExId)
                             }
 
 
                             if (isNewTrainingSession) {
-                                val session = TrainingSession(
+                                val tempSession = TrainingSession(
                                     name = sessionName.ifBlank { unknowntrainingString },
                                     doneExercises = exerciseIds,
                                     date = Date()
                                 )
-                                strengthTrainingViewModel.addTrainingSession(session)
+                                strengthTrainingViewModel.addTrainingSession(tempSession)
                             } else{
+                                Log.d("EditStrengthTrainingSessionView", "{${session?.id}}")
                                 session!!.name = sessionName.ifBlank { unknowntrainingString }
                                 session.doneExercises = exerciseIds
                                 strengthTrainingViewModel.updateTrainingSession(session)
@@ -247,7 +243,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
                             Text(
-                                text = strengthTrainingViewModel.exercises.find { it?.id == exercise.exerciseID }?.name ?: stringResource(id = R.string.unknown_exercise), //exercise-name,
+                                text = strengthTrainingViewModel.exercises.find { it?.id == exercise.exerciseID }?.name ?: stringResource(id = R.string.unknown_exercise),
                                 modifier = Modifier.padding(16.dp)
                             )
                         }
@@ -260,7 +256,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                     scope.launch {
                         val template = TrainingTemplate(
                             name = sessionName.ifBlank { "Template" },
-                            exerciseIds = selectedExercisesIDs
+                            exerciseIds = selectedExercises.map { it.exerciseID }
                         )
                         strengthTrainingViewModel.addTemplate(template)
                     }
@@ -271,8 +267,4 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
             }
         }
     }
-
-
-
-
 }
