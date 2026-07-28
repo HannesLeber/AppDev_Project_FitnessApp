@@ -78,8 +78,8 @@ fun SelectExerciseView(navController: NavController, strengthTrainingViewModel: 
                     .fillMaxSize()
             ) {
                 items(strengthTrainingViewModel.exercises) { item ->
-                    ExerciseItem(item?.name ?: "none", Icons.Default.FitnessCenter, item?.id ?: 0, onClick = {
-                        strengthTrainingViewModel.selectedExercise.value = item!!
+                    ExerciseItem(item!!.name , Icons.Default.FitnessCenter, item.id , onClick = {
+                        strengthTrainingViewModel.selectedExercise.value = item
                         strengthTrainingViewModel.exerciseHasBeenSelected.value = true
                         navController.popBackStack()
                         })

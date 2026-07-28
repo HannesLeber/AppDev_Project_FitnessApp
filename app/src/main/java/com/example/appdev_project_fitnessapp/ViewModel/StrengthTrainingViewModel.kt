@@ -1,6 +1,5 @@
 package com.example.appdev_project_fitnessapp.ViewModel
 
-import android.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,10 +41,12 @@ class StrengthTrainingViewModel(
     var currentExercise by mutableStateOf<Exercise?>(null)
     val sets = mutableStateListOf<ExerciseSet?>()
 
-    var selectedExercise = mutableStateOf<Exercise>(Exercise(name = "none", prSetID = null, doneExercises = listOf()))
+    var selectedExercise = mutableStateOf<Exercise?>(null)
     var exerciseHasBeenSelected = mutableStateOf(false)
 
     val templates = mutableStateListOf<TrainingTemplate?>()
+
+
 
     //region TrainingSession
     fun getAllTrainingSessions(){
@@ -63,11 +64,10 @@ class StrengthTrainingViewModel(
         }
     }
 
-    fun addTrainingSession(trainingSession: TrainingSession){
-        viewModelScope.launch {
-            trainingSessionDao.insert(trainingSession)
-            getAllTrainingSessions()
-        }
+    suspend fun addTrainingSession(trainingSession: TrainingSession): Int {
+        val id = trainingSessionDao.insert(trainingSession).toInt()
+        getAllTrainingSessions()
+        return id
     }
 
     fun deleteTrainingSession(trainingSession: TrainingSession){
@@ -77,10 +77,9 @@ class StrengthTrainingViewModel(
         }
     }
 
-    private fun updateTrainingSession(trainingSession: TrainingSession){
+    fun updateTrainingSession(trainingSession: TrainingSession){
         viewModelScope.launch {
-            trainingSessionDao.delete(trainingSessionDao.findById(trainingSession.id))
-            trainingSessionDao.insert(trainingSession)
+            trainingSessionDao.update(trainingSession.id, trainingSession.name!!, trainingSession.doneExercises)
             getAllTrainingSessions()
         }
     }
@@ -95,23 +94,21 @@ class StrengthTrainingViewModel(
         }
     }
 
-    fun getDoneExerciseByID(id: Int){
-        viewModelScope.launch {
-            currentDoneExercise = doneExerciseDao.findById(id)
-        }
+    suspend fun getDoneExerciseByID(id: Int) : DoneExercise?{
+        currentDoneExercise = doneExerciseDao.findById(id)
+        return currentDoneExercise
     }
 
-    fun insertDoneExercise(doneExercise: DoneExercise): Int{
-        var id = doneExercises[0]?.id //0 is the last inserted Entry, therefore the latest ID
-        if (id == null){
-            id = 0
-        }
-        viewModelScope.launch {
-            doneExerciseDao.insert(doneExercise)
-            getAllDoneExercises()
-        }
-        return id + 1 //id is already taken, the next ID to be used is id+1
+    suspend fun getDoneExercisesByIDs(ids: List<Int>): List<DoneExercise> {
+        return doneExerciseDao.loadAllByIds(ids.toIntArray())
     }
+
+    suspend fun insertDoneExercise(doneExercise: DoneExercise): Int {
+        val id = doneExerciseDao.insert(doneExercise).toInt()
+        getAllDoneExercises()
+        return id
+    }
+
 
     fun deleteDoneExercise(doneExercise: DoneExercise){
         viewModelScope.launch {
@@ -144,20 +141,14 @@ class StrengthTrainingViewModel(
         }
     }
 
-    fun insertExercise(exercise: Exercise, useAsSelectedExercise: Boolean = false): Int{
-        var id = exercises[0]?.id //0 is the last inserted Entry, therefore the latest ID
-        if (id == null){
-            id = 0
-        }
-        viewModelScope.launch {
-            exerciseDao.insert(exercise)
-            getAllExercises()
-        }
-        if (useAsSelectedExercise){
-            selectedExercise.value = exercise
+    suspend fun insertExercise(exercise: Exercise, useAsSelectedExercise: Boolean = false): Int {
+        val id = exerciseDao.insert(exercise).toInt()
+        getAllExercises()
+        if (useAsSelectedExercise) {
+            selectedExercise.value = exercise.copy(id = id)
             exerciseHasBeenSelected.value = true
         }
-        return id + 1
+        return id
     }
 
     fun deleteExercise(exercise: Exercise){
@@ -185,10 +176,9 @@ class StrengthTrainingViewModel(
         }
     }
 
-    fun insertSet(set: ExerciseSet){
-        viewModelScope.launch {
-            setDao.insert(set)
-        }
+    suspend fun insertSet(set: ExerciseSet): Int {
+        val id = setDao.insert(set).toInt()
+        return id
     }
 
     fun deleteSet(set: ExerciseSet){
@@ -206,10 +196,10 @@ class StrengthTrainingViewModel(
     //endregion
 
 //region Template
-    fun addTemplate(template: TrainingTemplate){
-        viewModelScope.launch {
-            trainingTemplateDao.insert(template)
-        }
+    suspend fun addTemplate(template: TrainingTemplate): Int {
+        val id = trainingTemplateDao.insert(template).toInt()
+        getAllTemplates()
+        return id
     }
 
     fun deleteTemplate(template: TrainingTemplate){

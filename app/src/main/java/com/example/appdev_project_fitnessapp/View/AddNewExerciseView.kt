@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -39,6 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddNewExerciseView(navController: NavController, strengthTrainingViewModel: StrengthTrainingViewModel) {
     var exerciseName by rememberSaveable { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -58,9 +60,11 @@ fun AddNewExerciseView(navController: NavController, strengthTrainingViewModel: 
                 actions = {
                     IconButton(onClick = {
                         val exercise = Exercise(name = exerciseName, prSetID = null, doneExercises = listOf())
-                        strengthTrainingViewModel.insertExercise(exercise, true)
-                        navController.navigate("editStrengthTraining") {
-                            popUpTo("editStrengthTraining") { inclusive = true }
+                        scope.launch {
+                            strengthTrainingViewModel.insertExercise(exercise, true)
+                            navController.navigate("editStrengthTraining") {
+                                popUpTo("editStrengthTraining") { inclusive = true }
+                            }
                         }
                     }) {
                         Icon(Icons.Default.Save, contentDescription = stringResource(id = R.string.save))
@@ -84,9 +88,11 @@ fun AddNewExerciseView(navController: NavController, strengthTrainingViewModel: 
 
             Button(onClick = {
                 val exercise = Exercise(name = exerciseName, prSetID = null, doneExercises = listOf())
-                strengthTrainingViewModel.insertExercise(exercise, true)
-                navController.navigate("editStrengthTraining") {
-                    popUpTo("editStrengthTraining") { inclusive = true }
+                scope.launch {
+                    strengthTrainingViewModel.insertExercise(exercise, true)
+                    navController.navigate("editStrengthTraining") {
+                        popUpTo("editStrengthTraining") { inclusive = true }
+                    }
                 }
             },
                 modifier = Modifier.fillMaxWidth()

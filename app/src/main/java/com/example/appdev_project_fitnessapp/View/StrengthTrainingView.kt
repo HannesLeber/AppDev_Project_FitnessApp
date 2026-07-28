@@ -1,6 +1,7 @@
 package com.example.appdev_project_fitnessapp.View
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -184,7 +185,11 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
                         TrainingSessionItem(
                             item?.name ?: "none",
                             Icons.Default.FitnessCenter,
-                            item?.id ?: 0
+                            item?.id ?: 0,
+                            onClick = {
+                                strengthTrainingViewModel.currentTrainingSession = item
+                                navController.navigate("editStrengthTraining")
+                            }
                         )
                     }
                 }
@@ -200,7 +205,7 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
 
 
 @Composable
-fun TrainingSessionItem(title: String, icon: ImageVector, id: Int){
+fun TrainingSessionItem(title: String, icon: ImageVector, id: Int, onClick: () -> Unit = {}){
     Box(
         //TODO: make clickable and add navigation on click
         modifier = Modifier
@@ -208,7 +213,8 @@ fun TrainingSessionItem(title: String, icon: ImageVector, id: Int){
             .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
             .padding(10.dp)
             .height(30.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         contentAlignment = androidx.compose.ui.Alignment.Center,
     ){
         Row(){
