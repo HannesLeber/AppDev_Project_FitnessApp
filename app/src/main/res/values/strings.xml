@@ -4,5 +4,23 @@
     <string name="fitness_app">Fitness App</string>
     <string name="strength_training">Strength Training</string>
     <string name="reminders">Reminders</string>
-    <string name="step_counter">Schrittzähler</string>
+    <string name="select_exercise">Select Exercise</string>
+    <string name="add_new_exercise">Add New Exercise</string>
+    <string name="add_exercise">Add Exercise</string>
+    <string name="choose_template">Choose Template</string>
+    <string name="edit_strength_training">Edit Strength Training</string>
+    <string name="new_strength_training">New Strength Training</string>
+    <string name="settings">Settings</string>
+    <string name="name_of_exercise">Name of Exercise</string>
+    <string name="back">back</string>
+    <string name="save">save</string>
+    <string name="delete">delete</string>
+    <string name="unknown_training">Unknown Training</string>
+    <string name="add">add</string>
+    <string name="name_of_session">Name of Session</string>
+    <string name="add_new_template">Add New Template</string>
+    <string name="exercises">Exercises</string>
+    <string name="create_exercise">Create Exercise</string>
+    <string name="step_counter" translatable="false">Schrittzähler</string>
+
 </resources>
