@@ -22,5 +22,7 @@
     <string name="add_new_template">Neue Vorlage hinzufügen</string>
     <string name="exercises">Übungen</string>
     <string name="create_exercise">Übung erstellen</string>
-
+    <string name="save_as_template">als Vorlage speichern</string>
+    <string name="unknown_exercise">Unbekannte Übung</string>
+    <string name="create_template">Vorlage erstellen</string>
 </resources>

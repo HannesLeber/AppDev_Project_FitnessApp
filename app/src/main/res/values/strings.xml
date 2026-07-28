@@ -21,5 +21,9 @@
     <string name="add_new_template">Add New Template</string>
     <string name="exercises">Exercises</string>
     <string name="create_exercise">Create Exercise</string>
+    <string name="save_as_template">Save as Template</string>
+    <string name="unknown_exercise">Unknown Exercise</string>
+    <string name="create_template">Create Template</string>
+
 
 </resources>
