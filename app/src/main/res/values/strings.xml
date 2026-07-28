@@ -21,5 +21,6 @@
     <string name="add_new_template">Add New Template</string>
     <string name="exercises">Exercises</string>
     <string name="create_exercise">Create Exercise</string>
+    <string name="step_counter" translatable="false">Schrittzähler</string>
 
 </resources>

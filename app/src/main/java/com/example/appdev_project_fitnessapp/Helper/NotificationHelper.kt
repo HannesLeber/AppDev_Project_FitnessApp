@@ -17,10 +17,11 @@ import com.example.appdev_project_fitnessapp.MainActivity
 object NotificationHelper {
 
     const val CHANNEL_ID = "reminder_channel"
+    const val STEP_CHANNEL_ID = "step_counter_channel"
 
     fun createNotificationChannel(context: Context) {
 
-        val channel = NotificationChannel(
+        val reminderChannel = NotificationChannel(
             CHANNEL_ID,
             "Reminder Notifications",
             NotificationManager.IMPORTANCE_DEFAULT
@@ -28,8 +29,17 @@ object NotificationHelper {
             description = "Channel for reminder reminders"
         }
 
+        val stepChannel = NotificationChannel(
+            STEP_CHANNEL_ID,
+            "Schrittzähler",
+            NotificationManager.IMPORTANCE_LOW // Low priority for silent background updates
+        ).apply {
+            description = "Zeigt den aktuellen Schrittestatus an"
+        }
+
         val manager = context.getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(channel)
+        manager.createNotificationChannel(reminderChannel)
+        manager.createNotificationChannel(stepChannel)
         Log.d("Notification", "Created")
 
     }
