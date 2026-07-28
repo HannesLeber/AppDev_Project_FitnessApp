@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
@@ -86,6 +87,16 @@ fun HomeScreen(navController: NavHostController){
                     icon = { Icon(Icons.Default.Timer, contentDescription = null) },
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
+                NavigationDrawerItem(
+                    label = { Text("${stringResource(id = R.string.step_counter)}") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        navController.navigate("stepCounter")
+                    },
+                    icon = { Icon(Icons.AutoMirrored.Filled.DirectionsWalk, contentDescription = null) },
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
                 //TODO: add other Items (settings etc.)
             }
         }
@@ -120,6 +131,12 @@ fun HomeScreen(navController: NavHostController){
                         homePageNavigationItem(stringResource(id = R.string.strength_training), Icons.Default.FitnessCenter, onClick = {
                             scope.launch { drawerState.close() }
                             navController.navigate("strengthTraining")
+                        })
+                    }
+                    item{
+                        homePageNavigationItem(stringResource(id = R.string.step_counter), Icons.AutoMirrored.Filled.DirectionsWalk, onClick = {
+                            scope.launch { drawerState.close() }
+                            navController.navigate("stepCounter")
                         })
                     }
                     //TODO: add other items

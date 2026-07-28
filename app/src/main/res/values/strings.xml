@@ -25,5 +25,6 @@
     <string name="unknown_exercise">Unknown Exercise</string>
     <string name="create_template">Create Template</string>
 
+    <string name="step_counter" translatable="false">Schrittzähler</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.example.appdev_project_fitnessapp.View
 
+import android.R.attr.id
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
