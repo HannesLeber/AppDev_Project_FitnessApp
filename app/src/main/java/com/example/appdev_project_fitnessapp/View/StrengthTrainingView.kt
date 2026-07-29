@@ -64,12 +64,12 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
         strengthTrainingViewModel.loadData()
         trainingSessions.clear()
         trainingSessions.addAll(strengthTrainingViewModel.trainingSessions)
-//        if (strengthTrainingViewModel.trainingSessions.isEmpty()){
-//            strengthTrainingViewModel.addTrainingSession(TrainingSession(name = "Test", doneExercises = listOf(), date = Date()))
-//            strengthTrainingViewModel.addTrainingSession(TrainingSession(name = "Test2", doneExercises = listOf(), date = Date()))
-//            strengthTrainingViewModel.addTrainingSession(TrainingSession(name = "Test3", doneExercises = listOf(), date = Date()))
-//        }
-
+        //reset all temporary variables in viewmodel
+        strengthTrainingViewModel.trainingSessionToBeEdited = null
+        strengthTrainingViewModel.temprarySelectedDoneExercises.clear()
+        strengthTrainingViewModel.temporaryDeletedDoneExercises.clear()
+        strengthTrainingViewModel.exerciseHasBeenSelected.value = false
+        strengthTrainingViewModel.temporarySessionName = ""
     }
 
     if (showDialog) {
@@ -187,7 +187,7 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
                             Icons.Default.FitnessCenter,
                             item?.id ?: 0,
                             onClick = {
-                                strengthTrainingViewModel.currentTrainingSession = item
+                                strengthTrainingViewModel.trainingSessionToBeEdited = item
                                 navController.navigate("editStrengthTraining")
                             }
                         )

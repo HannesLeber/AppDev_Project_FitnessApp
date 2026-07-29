@@ -62,16 +62,19 @@ import java.util.Date
 fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTrainingViewModel: StrengthTrainingViewModel) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    var sessionName by remember { mutableStateOf("") }
+    var sessionToBeEdited_Name by remember { mutableStateOf("") }
     val selectedExercises = remember { mutableStateListOf<DoneExercise>() }
     var selectedExercisesIDs by remember { mutableStateOf(listOf<Int>()) }
     val scope = rememberCoroutineScope()
-    val unknowntrainingString = stringResource(R.string.unknown_training)
-    val session = strengthTrainingViewModel.currentTrainingSession
+    val unknowntrainingString = stringResource(R.string.unknown_training) //just a String, that i can't get later in the coroutine
+    val sessionToBeEdited = strengthTrainingViewModel.trainingSessionToBeEdited
 
     var isNewTrainingSession by remember { mutableStateOf(false) }
 
-
+    /**
+     * if the last screen was the SelectExerciseView, and the user has selected an exercise,
+     * load it into the selectedExercises list. (temporarily, until the user saves the session)
+     */
     LaunchedEffect(strengthTrainingViewModel.exerciseHasBeenSelected.value) {
         if (strengthTrainingViewModel.exerciseHasBeenSelected.value) {
             val selected = strengthTrainingViewModel.selectedExercise.value
@@ -81,6 +84,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                 val persistedDoneExercise = strengthTrainingViewModel.getDoneExerciseByID(doneExerciseId)
                 if (persistedDoneExercise != null) {
                     selectedExercises.add(persistedDoneExercise)
+                    strengthTrainingViewModel.temprarySelectedDoneExercises.add(persistedDoneExercise)
                 }
             }
             strengthTrainingViewModel.exerciseHasBeenSelected.value = false
@@ -90,27 +94,45 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                Log.d("Lifecycle", "ON_START")
-                if (strengthTrainingViewModel.currentTrainingSession != null) {
-                    sessionName = session?.name ?:"None"
-                    selectedExercisesIDs = session!!.doneExercises
+                /**
+                 * Load Exercises within this Session if it is an existing Session
+                 * else set isNewTrainingSession to true
+                 */
+                if (strengthTrainingViewModel.trainingSessionToBeEdited != null) {
+                    sessionToBeEdited_Name = sessionToBeEdited?.name ?:"None"
+                    selectedExercisesIDs = sessionToBeEdited!!.doneExercises
                     
                     selectedExercises.clear()
                     scope.launch {
                         val exercises = strengthTrainingViewModel.getDoneExercisesByIDs(selectedExercisesIDs)
                         selectedExercises.addAll(exercises)
+                        if(strengthTrainingViewModel.temprarySelectedDoneExercises.isNotEmpty()){
+                            selectedExercises.addAll(strengthTrainingViewModel.temprarySelectedDoneExercises.toList() as Collection<DoneExercise>)
+                        }
+                        if(strengthTrainingViewModel.temporaryDeletedDoneExercises.isNotEmpty()){
+                            Log.d("EditStrengthTrainingSessionView", "deleting currentDeletedDoneExercises")
+                            strengthTrainingViewModel.temporaryDeletedDoneExercises.forEach { doneExercise ->
+                                if(doneExercise != null){
+                                    val removed = selectedExercises.remove(doneExercise)
+                                    Log.d("EditStrengthTrainingSessionView", "deleting $doneExercise ${if(removed) "successful" else "failed"}")
+                                }
+                            }
+                        }
                     }
-                    
-                    Log.d("Lifecycle", "is not new Trainingsession")
-                    isNewTrainingSession = false
+                    Log.d("EditStrengthTrainingSessionView", "is not new Trainingsession")
+                    isNewTrainingSession = false //should be unnecessary, but better save than sorry
                 } else{
                     isNewTrainingSession = true
-                    Log.d("Lifecycle", "is new Trainingsession")
+                    Log.d("EditStrengthTrainingSessionView", "is new Trainingsession")
                 }
-
+                if(strengthTrainingViewModel.temporarySessionName.isNotBlank()){
+                    sessionToBeEdited_Name = strengthTrainingViewModel.temporarySessionName
+                }
             }
             else if (event == Lifecycle.Event.ON_STOP) {
-                Log.d("Lifecycle", "ON_STOP")
+                //save Values
+                strengthTrainingViewModel.temporarySessionName = sessionToBeEdited_Name
+                Log.d("EditStrengthTrainingSessionView", "ON_STOP")
             }
         }
 
@@ -136,25 +158,34 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                         scope.launch {
                             val exerciseIds = mutableListOf<Int>()
                             selectedExercises.forEach { exercise ->
-                                val doneExId = strengthTrainingViewModel.insertDoneExercise(
-                                    DoneExercise(exerciseID = exercise.exerciseID, sets = listOf())
-                                )
-                                exerciseIds.add(doneExId)
+                                if (strengthTrainingViewModel.getDoneExerciseByID(exercise.id) == null) {
+                                    val doneExId = strengthTrainingViewModel.insertDoneExercise(
+                                        DoneExercise(exerciseID = exercise.exerciseID, sets = listOf())
+                                    )
+                                    exerciseIds.add(doneExId)
+                                } else {
+                                    val doneExId = exercise.id
+                                    exerciseIds.add(doneExId)
+                                }
+
                             }
 
 
                             if (isNewTrainingSession) {
                                 val tempSession = TrainingSession(
-                                    name = sessionName.ifBlank { unknowntrainingString },
+                                    name = sessionToBeEdited_Name.ifBlank { unknowntrainingString },
                                     doneExercises = exerciseIds,
                                     date = Date()
                                 )
                                 strengthTrainingViewModel.addTrainingSession(tempSession)
                             } else{
-                                Log.d("EditStrengthTrainingSessionView", "{${session?.id}}")
-                                session!!.name = sessionName.ifBlank { unknowntrainingString }
-                                session.doneExercises = exerciseIds
-                                strengthTrainingViewModel.updateTrainingSession(session)
+                                Log.d("EditStrengthTrainingSessionView", "{${sessionToBeEdited?.id}}")
+                                sessionToBeEdited!!.name = sessionToBeEdited_Name.ifBlank { unknowntrainingString }
+                                sessionToBeEdited.doneExercises = exerciseIds
+                                strengthTrainingViewModel.updateTrainingSession(sessionToBeEdited)
+                            }
+                            if(strengthTrainingViewModel.temporaryDeletedDoneExercises.isNotEmpty()){
+                                strengthTrainingViewModel.deleteDoneExercises(strengthTrainingViewModel.temporaryDeletedDoneExercises.toList() as List<DoneExercise>)
                             }
                             navController.popBackStack()
                         }
@@ -172,8 +203,8 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                 .fillMaxSize()
         ) {
             OutlinedTextField(
-                value = sessionName,
-                onValueChange = { sessionName = it },
+                value = sessionToBeEdited_Name,
+                onValueChange = { sessionToBeEdited_Name = it },
                 label = { Text(stringResource(R.string.name_of_session)) },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -198,11 +229,13 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn(modifier = Modifier.weight(1f)) {
-                items(selectedExercises, key = { it.id }) { exercise ->
+                items(selectedExercises, key = { it.id }) { doneExercise ->
                     val dismissState = rememberSwipeToDismissBoxState(
                         confirmValueChange = {
                             if (it == SwipeToDismissBoxValue.StartToEnd) {
-                                selectedExercises.remove(exercise)
+                                selectedExercises.remove(doneExercise)
+                                strengthTrainingViewModel.temprarySelectedDoneExercises.remove(doneExercise)
+                                strengthTrainingViewModel.temporaryDeletedDoneExercises.add(doneExercise)
                                 true
                             } else {
                                 false
@@ -243,7 +276,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
                             Text(
-                                text = strengthTrainingViewModel.exercises.find { it?.id == exercise.exerciseID }?.name ?: stringResource(id = R.string.unknown_exercise),
+                                text = strengthTrainingViewModel.exercises.find { it?.id == doneExercise.exerciseID }?.name ?: stringResource(id = R.string.unknown_exercise),
                                 modifier = Modifier.padding(16.dp)
                             )
                         }
@@ -255,7 +288,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                 onClick = {
                     scope.launch {
                         val template = TrainingTemplate(
-                            name = sessionName.ifBlank { "Template" },
+                            name = sessionToBeEdited_Name.ifBlank { "Template" },
                             exerciseIds = selectedExercises.map { it.exerciseID }
                         )
                         strengthTrainingViewModel.addTemplate(template)

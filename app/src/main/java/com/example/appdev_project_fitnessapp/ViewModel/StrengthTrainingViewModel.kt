@@ -34,17 +34,21 @@ class StrengthTrainingViewModel(
     // as long as the reference to the list object remains the same.
 
     val trainingSessions = mutableStateListOf<TrainingSession?>() //val, weil mit den .clear() und .add() funktionen dann die UI aktualisiert wird.
-    var currentTrainingSession by mutableStateOf<TrainingSession?>(null)
+    var trainingSessionToBeEdited by mutableStateOf<TrainingSession?>(null)
     val doneExercises = mutableStateListOf<DoneExercise?>()
-    var currentDoneExercise by mutableStateOf<DoneExercise?>(null)
+    var DoneExerciseToBeEdited by mutableStateOf<DoneExercise?>(null)
     val exercises = mutableStateListOf<Exercise?>()
-    var currentExercise by mutableStateOf<Exercise?>(null)
+    var ExerciseToBeEdited by mutableStateOf<Exercise?>(null)
     val sets = mutableStateListOf<ExerciseSet?>()
+    val temprarySelectedDoneExercises = mutableStateListOf<DoneExercise?>()
+    val temporaryDeletedDoneExercises = mutableStateListOf<DoneExercise?>()
 
     var selectedExercise = mutableStateOf<Exercise?>(null)
     var exerciseHasBeenSelected = mutableStateOf(false)
 
     val templates = mutableStateListOf<TrainingTemplate?>()
+
+    var temporarySessionName by mutableStateOf("")
 
 
 
@@ -59,7 +63,7 @@ class StrengthTrainingViewModel(
 
     fun getTrainingSessionByID(id: Int){
         viewModelScope.launch {
-            currentTrainingSession = trainingSessionDao.findById(id)
+            trainingSessionToBeEdited = trainingSessionDao.findById(id)
 
         }
     }
@@ -95,12 +99,12 @@ class StrengthTrainingViewModel(
     }
 
     suspend fun getDoneExerciseByID(id: Int) : DoneExercise?{
-        currentDoneExercise = doneExerciseDao.findById(id)
-        return currentDoneExercise
+        DoneExerciseToBeEdited = doneExerciseDao.findById(id)
+        return DoneExerciseToBeEdited
     }
 
     suspend fun getDoneExercisesByIDs(ids: List<Int>): List<DoneExercise> {
-        return doneExerciseDao.loadAllByIds(ids.toIntArray())
+        return doneExerciseDao.loadAllByIds(ids.toIntArray()).sortedBy { it.id }
     }
 
     suspend fun insertDoneExercise(doneExercise: DoneExercise): Int {
@@ -115,6 +119,14 @@ class StrengthTrainingViewModel(
             doneExerciseDao.delete(doneExercise)
             getAllDoneExercises()
         }
+    }
+
+    fun deleteDoneExercises(doneExercises: List<DoneExercise?>){
+        doneExercises.forEach({
+            if (it != null){
+                deleteDoneExercise(it)
+            }
+        })
     }
 
     fun updateDoneExercise(doneExercise: DoneExercise){
@@ -137,7 +149,7 @@ class StrengthTrainingViewModel(
 
     fun getExerciseByID(id: Int){
         viewModelScope.launch {
-            currentExercise = exerciseDao.findById(id)
+            ExerciseToBeEdited = exerciseDao.findById(id)
         }
     }
 
