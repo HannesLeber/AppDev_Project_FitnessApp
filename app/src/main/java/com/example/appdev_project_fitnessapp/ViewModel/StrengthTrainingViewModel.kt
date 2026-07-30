@@ -39,7 +39,7 @@ class StrengthTrainingViewModel(
     var DoneExerciseToBeEdited by mutableStateOf<DoneExercise?>(null)
     val exercises = mutableStateListOf<Exercise?>()
     var ExerciseToBeEdited by mutableStateOf<Exercise?>(null)
-    val sets = mutableStateListOf<ExerciseSet?>()
+    val sets = mutableStateListOf<ExerciseSet>()
     val temprarySelectedDoneExercises = mutableStateListOf<DoneExercise?>()
     val temporaryDeletedDoneExercises = mutableStateListOf<DoneExercise?>()
 
@@ -49,6 +49,8 @@ class StrengthTrainingViewModel(
     val templates = mutableStateListOf<TrainingTemplate?>()
 
     var temporarySessionName by mutableStateOf("")
+
+
 
 
 
@@ -193,9 +195,10 @@ class StrengthTrainingViewModel(
         return id
     }
 
-    fun deleteSet(set: ExerciseSet){
+    fun deleteSet(set: ExerciseSet, doneExercise: DoneExercise){
         viewModelScope.launch {
             setDao.delete(set)
+            doneExerciseDao.update(doneExercise.id, doneExercise.exerciseID, doneExercise.sets)
         }
     }
 

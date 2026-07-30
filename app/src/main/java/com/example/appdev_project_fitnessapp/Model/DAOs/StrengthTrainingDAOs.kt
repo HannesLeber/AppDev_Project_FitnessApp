@@ -62,6 +62,9 @@ interface DoneExerciseDao {
 
     @Delete
     suspend fun delete(doneExercise: DoneExercise)
+
+    @Query("UPDATE DoneExercise SET exerciseID = :newExerciseID, exerciseSets = :newSets WHERE id = :id")
+    suspend fun update(id: Int, newExerciseID: Int, newSets: List<Int>)
 }
 
 @Dao
