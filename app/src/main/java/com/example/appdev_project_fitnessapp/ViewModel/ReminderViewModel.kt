@@ -30,8 +30,18 @@ class ReminderViewModel(
 
     fun addReminder(reminder: Reminder) {
         viewModelScope.launch {
-            repository.insert(reminder)
-            repository.scheduleReminder(reminder)
+            val savedReminder = if (reminder.id == 0) {
+                repository.insert(reminder)
+            } else {
+                repository.update(reminder)
+                repository.cancelReminder(reminder)
+                reminder
+            }
+
+            if (savedReminder.enabled) {
+                repository.scheduleReminder(savedReminder)
+            }
+
             loadReminders()
         }
     }

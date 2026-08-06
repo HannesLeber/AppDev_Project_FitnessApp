@@ -30,7 +30,7 @@ import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
         Reminder::class,
         DailyStepData::class
      ],
-        version = 5,
+        version = 8,
         exportSchema = false
 )
 @TypeConverters(Converters::class)

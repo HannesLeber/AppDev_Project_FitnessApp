@@ -27,7 +27,7 @@ import com.example.appdev_project_fitnessapp.View.StrengthTrainingView
 import com.example.appdev_project_fitnessapp.View.ChooseTemplateView
 import com.example.appdev_project_fitnessapp.View.EditDoneExerciseView
 import com.example.appdev_project_fitnessapp.View.EditStrengthTrainingSessionView
-import com.example.appdev_project_fitnessapp.View.ReminderScreen
+import com.example.appdev_project_fitnessapp.View.Reminders.ReminderScreen
 import com.example.appdev_project_fitnessapp.View.SelectExerciseView
 import com.example.appdev_project_fitnessapp.View.StepCounterScreen
 import com.example.appdev_project_fitnessapp.ViewModel.ReminderViewModel
