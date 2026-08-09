@@ -156,7 +156,7 @@ fun ChooseTemplateView(navController: NavHostController, strengthTrainingViewMod
                                 },
                                 enableDismissFromEndToStart = false
                             ) {
-                                TemplateItem(
+                                TrainingSessionItem(
                                     title = item.name,
                                     icon = Icons.Default.FitnessCenter,
                                     onClick = {
@@ -201,26 +201,3 @@ fun ChooseTemplateView(navController: NavHostController, strengthTrainingViewMod
     }
 }
 
-@Composable
-fun TemplateItem(title: String, icon: ImageVector, onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
-            .padding(10.dp)
-            .height(30.dp)
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, contentDescription = null, tint = Color.White)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White
-            )
-        }
-    }
-}
