@@ -116,6 +116,9 @@ interface SetDao {
 
     @Delete
     suspend fun delete(set: ExerciseSet)
+
+    @Query("UPDATE ExerciseSet SET reps = :newReps, weight = :newWeight, warmUpSet = :newWarmupSet WHERE id = :id")
+    suspend fun update(id: Int, newReps: String, newWeight: String, newWarmupSet: Boolean)
 }
 
 

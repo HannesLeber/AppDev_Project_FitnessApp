@@ -114,6 +114,8 @@ fun EditDoneExerciseView(navController: NavHostController, strengthTrainingViewM
                 scope.launch(){
                     val setID = strengthTrainingViewModel.insertSet(ExerciseSet(reps= "0" ,weight = "0.0", warmupSet = false))
                     setIDs += setID
+                    doneExerciseToBeEdited.sets = setIDs
+                    strengthTrainingViewModel.updateDoneExercise(doneExerciseToBeEdited)
                     strengthTrainingViewModel.getSetsByIDs(setIDs)
                     sets = strengthTrainingViewModel.sets
                     Log.d("EditDoneExerciseView", "sets: $sets")

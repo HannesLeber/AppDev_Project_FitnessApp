@@ -129,8 +129,7 @@ class StrengthTrainingViewModel(
 
     fun updateDoneExercise(doneExercise: DoneExercise){
         viewModelScope.launch {
-            doneExerciseDao.delete(doneExercise)
-            doneExerciseDao.insert(doneExercise)
+            doneExerciseDao.update(doneExercise.id, doneExercise.exerciseID, doneExercise.sets)
             getAllDoneExercises()
         }
     }
@@ -202,16 +201,21 @@ class StrengthTrainingViewModel(
             setDao.delete(set)
             val updatedSets = doneExercise.sets.filter { it != set.id }
             doneExerciseDao.update(doneExercise.id, doneExercise.exerciseID, updatedSets)
-            updatePrSetAfterDeletingSet(doneExercise.exerciseID)
+            updatePrSetForExercise(doneExercise.exerciseID)
         }
     }
 
     fun updateSet(set: ExerciseSet, exerciseID: Int){
+        val setIndex = sets.indexOfFirst { it.id == set.id }
+        if (setIndex != -1) {
+            sets[setIndex] = set
+        }
+        if (currentPrSet.value?.id == set.id) {
+            currentPrSet.value = set
+        }
         viewModelScope.launch {
-            setDao.delete(set)
-            setDao.insert(set)
-            updatePrSetAfterSavingSet(set, exerciseID)
-            refreshPrSet(exerciseID)
+            setDao.update(set.id, set.reps, set.weight, set.warmupSet)
+            updatePrSetForExercise(exerciseID, set)
         }
     }
 
@@ -223,32 +227,31 @@ class StrengthTrainingViewModel(
         return trimmedWeight.replace(',', '.').toDoubleOrNull()
     }
 
-    private suspend fun updatePrSetAfterSavingSet(set: ExerciseSet, exerciseID: Int) {
-        val newWeight = weightToDouble(set.weight) ?: return
-        val exercise = exerciseDao.findById(exerciseID)
-        val prSet = exercise.prSetID?.let { setDao.loadAllByIds(intArrayOf(it)).firstOrNull() }
-        val prWeight = prSet?.let { weightToDouble(it.weight) }
-
-        if (prWeight == null || newWeight > prWeight) {
-            exerciseDao.updatePrSetID(exerciseID, set.id)
-            getAllExercises()
-        }
-    }
-
-    private suspend fun updatePrSetAfterDeletingSet(exerciseID: Int) {
+    private suspend fun updatePrSetForExercise(exerciseID: Int, savedSet: ExerciseSet? = null) {
         val doneExercises = doneExerciseDao.findByExerciseID(exerciseID).sortedBy { it.id }
         val setIDs = doneExercises.flatMap { it.sets }.filter { it != 0 }
-        if (setIDs.isEmpty()) {
+        val loadedSets = if (setIDs.isEmpty()) {
+            listOf()
+        } else {
+            setDao.loadAllByIds(setIDs.toIntArray()).sortedBy { it.id }
+        }
+        val setsToCompare = if (savedSet == null) {
+            loadedSets
+        } else if (loadedSets.any { it.id == savedSet.id }) {
+            loadedSets.map { if (it.id == savedSet.id) savedSet else it }
+        } else {
+            loadedSets + savedSet
+        }
+        if (setsToCompare.isEmpty()) {
             exerciseDao.updatePrSetID(exerciseID, null)
             currentPrSet.value = null
             getAllExercises()
             return
         }
-        val sets = setDao.loadAllByIds(setIDs.toIntArray()).sortedBy { it.id }
         var prSetID: Int? = null
         var prWeight: Double? = null
 
-        sets.forEach {
+        setsToCompare.forEach {
             val weight = weightToDouble(it.weight)
             if (weight != null && (prWeight == null || weight > prWeight!!)) {
                 prSetID = it.id
