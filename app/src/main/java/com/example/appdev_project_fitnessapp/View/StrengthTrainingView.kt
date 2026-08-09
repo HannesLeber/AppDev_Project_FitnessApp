@@ -1,6 +1,7 @@
 package com.example.appdev_project_fitnessapp.View
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,12 +64,12 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
         strengthTrainingViewModel.loadData()
         trainingSessions.clear()
         trainingSessions.addAll(strengthTrainingViewModel.trainingSessions)
-//        if (strengthTrainingViewModel.trainingSessions.isEmpty()){
-//            strengthTrainingViewModel.addTrainingSession(TrainingSession(name = "Test", doneExercises = listOf(), date = Date()))
-//            strengthTrainingViewModel.addTrainingSession(TrainingSession(name = "Test2", doneExercises = listOf(), date = Date()))
-//            strengthTrainingViewModel.addTrainingSession(TrainingSession(name = "Test3", doneExercises = listOf(), date = Date()))
-//        }
-
+        //reset all temporary variables in viewmodel
+        strengthTrainingViewModel.trainingSessionToBeEdited = null
+        strengthTrainingViewModel.temprarySelectedDoneExercises.clear()
+        strengthTrainingViewModel.temporaryDeletedDoneExercises.clear()
+        strengthTrainingViewModel.exerciseHasBeenSelected.value = false
+        strengthTrainingViewModel.temporarySessionName = ""
     }
 
     if (showDialog) {
@@ -184,7 +185,11 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
                         TrainingSessionItem(
                             item?.name ?: "none",
                             Icons.Default.FitnessCenter,
-                            item?.id ?: 0
+                            item?.id ?: 0,
+                            onClick = {
+                                strengthTrainingViewModel.trainingSessionToBeEdited = item
+                                navController.navigate("editStrengthTraining")
+                            }
                         )
                     }
                 }
@@ -200,7 +205,7 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
 
 
 @Composable
-fun TrainingSessionItem(title: String, icon: ImageVector, id: Int){
+fun TrainingSessionItem(title: String, icon: ImageVector, id: Int, onClick: () -> Unit = {}){
     Box(
         //TODO: make clickable and add navigation on click
         modifier = Modifier
@@ -208,10 +213,11 @@ fun TrainingSessionItem(title: String, icon: ImageVector, id: Int){
             .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
             .padding(10.dp)
             .height(30.dp)
-            .fillMaxWidth(),
-        contentAlignment = androidx.compose.ui.Alignment.Center,
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
     ){
-        Row(){
+        Row(verticalAlignment = Alignment.CenterVertically){
             Icon(icon, contentDescription = null)
             Spacer(modifier = Modifier.width(5.dp))
             Text(title)

@@ -31,8 +31,8 @@ data class Exercise(
 @Entity
 data class ExerciseSet(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "reps") var reps: Int,
-    @ColumnInfo(name = "weight") var weight: Double,
+    @ColumnInfo(name = "reps") var reps: String,
+    @ColumnInfo(name = "weight") var weight: String,
     @ColumnInfo(name = "warmUpSet") var warmupSet: Boolean
 )
 

@@ -5,5 +5,27 @@
     <string name="fitness_app">Fitness App</string>
     <string name="strength_training">Krafttraining</string>
     <string name="reminders">Benachrichtigungen</string>
-
+    <string name="select_exercise">Übung wählen</string>
+    <string name="add_new_exercise">Neue Übung hinzufügen</string>
+    <string name="add_exercise">Übung hinzufügen</string>
+    <string name="choose_template">Vorlage wählen</string>
+    <string name="edit_strength_training">Krafttraining bearbeiten</string>
+    <string name="new_strength_training">Neues Krafttraining</string>
+    <string name="settings">Einstellungen</string>
+    <string name="name_of_exercise">Name der Übung</string>
+    <string name="back">zurück</string>
+    <string name="save">speichern</string>
+    <string name="delete">löschen</string>
+    <string name="unknown_training">Unbenanntes Training</string>
+    <string name="add">hinzufügen</string>
+    <string name="name_of_session">Name der Trainingssession</string>
+    <string name="add_new_template">Neue Vorlage hinzufügen</string>
+    <string name="exercises">Übungen</string>
+    <string name="create_exercise">Übung erstellen</string>
+    <string name="save_as_template">als Vorlage speichern</string>
+    <string name="unknown_exercise">Unbekannte Übung</string>
+    <string name="create_template">Vorlage erstellen</string>
+    <string name="delete_template">Vorlage löschen</string>">
+    <string name="cancel">abbrechen</string>">
+    <string name="no_templates_available">Keine Vorlagen verfügbar</string>">
 </resources>

@@ -31,13 +31,16 @@ interface TrainingSessionDao {
     suspend fun findByDate(date: Date): List<TrainingSession>
 
     @Insert
-    suspend fun insert(trainingSession: TrainingSession)
+    suspend fun insert(trainingSession: TrainingSession) : Long
 
     @Insert
     suspend fun insertAll(vararg trainingSessions: TrainingSession)
 
     @Delete
     suspend fun delete(trainingSession: TrainingSession)
+
+    @Query("UPDATE TrainingSession SET trainingName = :newName, trainingExercises = :newTrainingExercises WHERE id = :id")
+    suspend fun update(id: Int, newName: String, newTrainingExercises: List<Int>)
 }
 
 @Dao
@@ -52,13 +55,16 @@ interface DoneExerciseDao {
     suspend fun findById(id: Int): DoneExercise
 
     @Insert
-    suspend fun insert(doneExercise: DoneExercise)
+    suspend fun insert(doneExercise: DoneExercise): Long
 
     @Insert
     suspend fun insertAll(vararg doneExercises: DoneExercise)
 
     @Delete
     suspend fun delete(doneExercise: DoneExercise)
+
+    @Query("UPDATE DoneExercise SET exerciseID = :newExerciseID, exerciseSets = :newSets WHERE id = :id")
+    suspend fun update(id: Int, newExerciseID: Int, newSets: List<Int>)
 }
 
 @Dao
@@ -76,7 +82,7 @@ interface ExerciseDao {
     suspend fun findByName(name: String): List<Exercise>
 
     @Insert
-    suspend fun insert(exercise: Exercise)
+    suspend fun insert(exercise: Exercise): Long
 
     @Insert
     suspend fun insertAll(vararg exercises: Exercise)
@@ -97,7 +103,7 @@ interface SetDao {
     suspend fun findById(id: Int): ExerciseSet
 
     @Insert
-    suspend fun insert(set: ExerciseSet)
+    suspend fun insert(set: ExerciseSet): Long
 
     @Insert
     suspend fun insertAll(vararg sets: ExerciseSet)
