@@ -12,7 +12,7 @@ import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
 import java.util.Date
 
-//TODO: Update-Funktionen schreiben! Aber nicht löschen und dann neu hinzufügen, sonst Problem mit den IDs
+
 @Dao
 interface TrainingSessionDao {
     @Query("SELECT * FROM TrainingSession ORDER BY id DESC")

@@ -226,7 +226,6 @@ fun SetItem(
     }
 
     Box(
-        //TODO: make clickable and add navigation on click
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable {

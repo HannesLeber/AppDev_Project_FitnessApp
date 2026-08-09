@@ -303,7 +303,6 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
 @Composable
 fun DoneExerciseItem(title: String, icon: ImageVector, onClick: () -> Unit = {}){
     Box(
-        //TODO: make clickable and add navigation on click
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp )
             .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))

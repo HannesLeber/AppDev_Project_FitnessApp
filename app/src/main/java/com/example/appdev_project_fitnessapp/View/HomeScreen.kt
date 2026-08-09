@@ -97,7 +97,6 @@ fun HomeScreen(navController: NavHostController){
                     icon = { Icon(Icons.AutoMirrored.Filled.DirectionsWalk, contentDescription = null) },
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
-                //TODO: add other Items (settings etc.)
             }
         }
     ){
@@ -118,7 +117,6 @@ fun HomeScreen(navController: NavHostController){
                 )
             }
         ) { innerPadding ->
-            //TODO: add content
             Column(modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -139,7 +137,7 @@ fun HomeScreen(navController: NavHostController){
                             navController.navigate("stepCounter")
                         })
                     }
-                    //TODO: add other items
+                    //add other items here
                 }
 
             }
@@ -154,7 +152,6 @@ fun HomeScreen(navController: NavHostController){
 @Composable
 fun homePageNavigationItem(title:String, icon: ImageVector, onClick: () -> Unit = {}){
     Box(
-        //TODO: make clickable and add navigation on click
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp )
             .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
