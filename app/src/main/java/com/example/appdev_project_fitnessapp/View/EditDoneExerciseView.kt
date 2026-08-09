@@ -193,6 +193,7 @@ fun SetItem(
     var setWeight by remember { mutableStateOf(set.weight) }
     Log.d("SetItem", "set weight to $setWeight")
     var backGroundColor by remember { mutableStateOf(if (set.warmupSet) Color.Green else Color.Gray) }
+    var textFielsFontSize = 20.sp
 
     val lifecycleOwner = LocalLifecycleOwner.current
     //save Values
@@ -219,9 +220,6 @@ fun SetItem(
         //TODO: make clickable and add navigation on click
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .background(color = backGroundColor, shape = RoundedCornerShape(16.dp))
-            .padding(10.dp)
-            .fillMaxWidth()
             .clickable {
                 set.warmupSet = !set.warmupSet
                 if (set.warmupSet) {
@@ -230,38 +228,41 @@ fun SetItem(
                     backGroundColor = Color.Gray
                 }
 
-            },
+            }
+            .background(color = backGroundColor, shape = RoundedCornerShape(16.dp))
+            .padding(20.dp)
+            .fillMaxWidth()
+            ,
         contentAlignment = Alignment.Center,
     ) {
         Column() {
 
-            Row() {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 //Reps
                 TextField(
                     value = setReps,
                     onValueChange = { setReps = it
                                     Log.d("SetItem", "Reps: $setReps")},
-                    textStyle = TextStyle.Default.copy(fontSize = 28.sp),
+                    textStyle = TextStyle.Default.copy(fontSize = textFielsFontSize),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.width(5.dp))
+                Spacer(modifier = Modifier.width(10.dp))
                 Text("x")
-                Spacer(modifier = Modifier.width(5.dp))
+                Spacer(modifier = Modifier.width(10.dp))
                 //Weight
                 TextField(
                     value = setWeight,
                     onValueChange = {
                         setWeight = it
                         Log.d("SetItem", "Weight: $setWeight")},
-                    textStyle = TextStyle.Default.copy(fontSize = 28.sp),
+                    textStyle = TextStyle.Default.copy(fontSize = textFielsFontSize),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(5.dp))
                 Text("kg")
             }
         }
     }
 }
-
-
