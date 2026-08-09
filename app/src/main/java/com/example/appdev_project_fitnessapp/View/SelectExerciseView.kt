@@ -78,7 +78,7 @@ fun SelectExerciseView(navController: NavController, strengthTrainingViewModel: 
                     .fillMaxSize()
             ) {
                 items(strengthTrainingViewModel.exercises) { item ->
-                    ExerciseItem(item!!.name , Icons.Default.FitnessCenter, item.id , onClick = {
+                    ExerciseItem(item!!.name ,  onClick = {
                         strengthTrainingViewModel.selectedExercise.value = item
                         strengthTrainingViewModel.exerciseHasBeenSelected.value = true
                         navController.popBackStack()
@@ -95,7 +95,7 @@ fun SelectExerciseView(navController: NavController, strengthTrainingViewModel: 
 
 
 @Composable
-fun ExerciseItem(title: String, icon: ImageVector, id: Int, onClick: () -> Unit = {}){
+fun ExerciseItem(title: String, onClick: () -> Unit = {}){
     Box(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp )
@@ -107,11 +107,7 @@ fun ExerciseItem(title: String, icon: ImageVector, id: Int, onClick: () -> Unit 
         contentAlignment = androidx.compose.ui.Alignment.Center,
     ){
         Row(){
-            Icon(icon, contentDescription = null)
-            Spacer(modifier = Modifier.width(5.dp))
             Text(title)
-            Spacer(modifier = Modifier.width(5.dp))
-            Text(id.toString())
         }
     }
 

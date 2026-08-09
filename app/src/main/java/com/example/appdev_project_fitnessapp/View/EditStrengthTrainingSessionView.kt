@@ -273,7 +273,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
                         },
                         enableDismissFromEndToStart = false
                     ) {
-                        DoneExerciseItem(strengthTrainingViewModel.exercises.find { it?.id == doneExercise.exerciseID }?.name ?: stringResource(id = R.string.unknown_exercise), Icons.Default.Add, onClick = {
+                        DoneExerciseItem(strengthTrainingViewModel.exercises.find { it?.id == doneExercise.exerciseID }?.name ?: stringResource(id = R.string.unknown_exercise),  onClick = {
                             strengthTrainingViewModel.DoneExerciseToBeEdited = doneExercise
                             navController.navigate("editDoneExercise")
                         })
@@ -301,7 +301,7 @@ fun EditStrengthTrainingSessionView(navController: NavHostController, strengthTr
 
 
 @Composable
-fun DoneExerciseItem(title: String, icon: ImageVector, onClick: () -> Unit = {}){
+fun DoneExerciseItem(title: String, onClick: () -> Unit = {}){
     Box(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp )
@@ -313,8 +313,6 @@ fun DoneExerciseItem(title: String, icon: ImageVector, onClick: () -> Unit = {})
         contentAlignment = androidx.compose.ui.Alignment.Center,
     ){
         Row(){
-            Icon(icon, contentDescription = null)
-            Spacer(modifier = Modifier.width(5.dp))
             Text(title)
             Spacer(modifier = Modifier.width(5.dp))
         }
