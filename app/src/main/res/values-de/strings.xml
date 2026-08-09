@@ -25,4 +25,7 @@
     <string name="save_as_template">als Vorlage speichern</string>
     <string name="unknown_exercise">Unbekannte Übung</string>
     <string name="create_template">Vorlage erstellen</string>
+    <string name="delete_template">Vorlage löschen</string>">
+    <string name="cancel">abbrechen</string>">
+    <string name="no_templates_available">Keine Vorlagen verfügbar</string>">
 </resources>

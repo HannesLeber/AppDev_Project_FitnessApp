@@ -24,6 +24,10 @@
     <string name="save_as_template">Save as Template</string>
     <string name="unknown_exercise">Unknown Exercise</string>
     <string name="create_template">Create Template</string>
+    <string name="delete_template">Delete Template</string>">
+    <string name="cancel">cancel</string>">
+    <string name="no_templates_available">No templates available</string>">
+
 
     <string name="step_counter" translatable="false">Schrittzähler</string>
 
