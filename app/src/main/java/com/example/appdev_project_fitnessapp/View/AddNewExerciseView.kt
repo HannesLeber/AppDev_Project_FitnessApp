@@ -45,7 +45,7 @@ fun AddNewExerciseView(navController: NavController, strengthTrainingViewModel: 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.select_exercise)) },
+                title = { Text(stringResource(R.string.add_exercise)) },
                 navigationIcon = {
                     if (navController.previousBackStackEntry != null) {
                         //Back-Button (go one page back (page = Entry in the backstack))

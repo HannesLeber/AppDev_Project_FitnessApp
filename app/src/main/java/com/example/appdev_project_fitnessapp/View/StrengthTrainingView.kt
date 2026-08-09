@@ -145,7 +145,7 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
         Column(modifier = Modifier
             .padding(innerPadding)
         ){
-            Text(stringResource(id = R.string.strength_training))
+
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
             ) {
