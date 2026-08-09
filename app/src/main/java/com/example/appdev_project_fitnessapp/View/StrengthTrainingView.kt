@@ -180,7 +180,7 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
                         },
                         enableDismissFromEndToStart = false
                     ) {
-                        TrainingSessionItem(
+                        CustomLazyColumnItem(
                             item?.name ?: "none",
                             Icons.Default.FitnessCenter,
                             onClick = {
@@ -202,7 +202,7 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
 
 
 @Composable
-fun TrainingSessionItem(title: String, icon: ImageVector, onClick: () -> Unit = {}){
+fun CustomLazyColumnItem(title: String, icon: ImageVector?, onClick: () -> Unit = {}){
     Box(
 
         modifier = Modifier
@@ -215,8 +215,10 @@ fun TrainingSessionItem(title: String, icon: ImageVector, onClick: () -> Unit = 
         contentAlignment = Alignment.Center,
     ){
         Row(verticalAlignment = Alignment.CenterVertically){
-            Icon(icon, contentDescription = null)
-            Spacer(modifier = Modifier.width(5.dp))
+            if(icon != null){
+                Icon(icon, contentDescription = null)
+                Spacer(modifier = Modifier.width(5.dp))
+            }
             Text(title)
         }
     }
