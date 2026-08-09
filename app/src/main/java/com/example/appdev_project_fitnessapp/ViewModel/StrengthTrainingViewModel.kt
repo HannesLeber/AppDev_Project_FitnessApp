@@ -29,11 +29,11 @@ class StrengthTrainingViewModel(
     private val trainingTemplateDao: TrainingTemplateDao
     ) : ViewModel() {
 
-    // Using 'val' for SnapshotStateLists. 
+    // Using 'val' for SnapshotStateLists.
     // Changes to the content (clear, add) will automatically trigger UI updates
     // as long as the reference to the list object remains the same.
 
-    val trainingSessions = mutableStateListOf<TrainingSession?>() //val, weil mit den .clear() und .add() funktionen dann die UI aktualisiert wird.
+    val trainingSessions = mutableStateListOf<TrainingSession?>() 
     var trainingSessionToBeEdited by mutableStateOf<TrainingSession?>(null)
     val doneExercises = mutableStateListOf<DoneExercise?>()
     var DoneExerciseToBeEdited by mutableStateOf<DoneExercise?>(null)
@@ -50,10 +50,6 @@ class StrengthTrainingViewModel(
 
     var temporarySessionName by mutableStateOf("")
 
-
-
-
-
     //region TrainingSession
     fun getAllTrainingSessions(){
         viewModelScope.launch {
@@ -66,7 +62,6 @@ class StrengthTrainingViewModel(
     fun getTrainingSessionByID(id: Int){
         viewModelScope.launch {
             trainingSessionToBeEdited = trainingSessionDao.findById(id)
-
         }
     }
 
@@ -210,16 +205,31 @@ class StrengthTrainingViewModel(
     }
     //endregion
 
-//region Template
-    suspend fun addTemplate(template: TrainingTemplate): Int {
-        val id = trainingTemplateDao.insert(template).toInt()
-        getAllTemplates()
-        return id
+    //region Template
+    fun getAllTemplates(){
+        viewModelScope.launch {
+            refreshTemplatesList()
+        }
+    }
+
+    // Interne Hilfsfunktion für konsistente Updates
+    private suspend fun refreshTemplatesList() {
+        val temp = trainingTemplateDao.getAll()
+        templates.clear()
+        templates.addAll(temp)
+    }
+
+    fun addTemplate(template: TrainingTemplate) {
+        viewModelScope.launch {
+            trainingTemplateDao.insert(template)
+            refreshTemplatesList()
+        }
     }
 
     fun deleteTemplate(template: TrainingTemplate){
         viewModelScope.launch {
             trainingTemplateDao.delete(template)
+            refreshTemplatesList()
         }
     }
 
@@ -227,26 +237,16 @@ class StrengthTrainingViewModel(
         viewModelScope.launch {
             trainingTemplateDao.delete(template)
             trainingTemplateDao.insert(template)
+            refreshTemplatesList()
         }
     }
-
-    fun getAllTemplates(){
-        viewModelScope.launch {
-            val temp = trainingTemplateDao.getAll()
-            templates.clear()
-            templates.addAll(temp)
-        }
-    }
-
-
-
-
     //endregion
 
     fun loadData(){
         getAllTrainingSessions()
         getAllDoneExercises()
         getAllExercises()
+        getAllTemplates()
     }
 
     companion object {
