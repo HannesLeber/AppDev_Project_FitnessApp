@@ -215,9 +215,9 @@ fun TrainingSessionItem(title: String, icon: ImageVector, id: Int, onClick: () -
             .height(30.dp)
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        contentAlignment = androidx.compose.ui.Alignment.Center,
+        contentAlignment = Alignment.Center,
     ){
-        Row(){
+        Row(verticalAlignment = Alignment.CenterVertically){
             Icon(icon, contentDescription = null)
             Spacer(modifier = Modifier.width(5.dp))
             Text(title)
