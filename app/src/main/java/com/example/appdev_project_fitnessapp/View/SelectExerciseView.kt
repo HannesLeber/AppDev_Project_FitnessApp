@@ -78,7 +78,7 @@ fun SelectExerciseView(navController: NavController, strengthTrainingViewModel: 
                     .fillMaxSize()
             ) {
                 items(strengthTrainingViewModel.exercises) { item ->
-                    ExerciseItem(item!!.name ,  onClick = {
+                    CustomLazyColumnItem(item!!.name ,null,  onClick = {
                         strengthTrainingViewModel.selectedExercise.value = item
                         strengthTrainingViewModel.exerciseHasBeenSelected.value = true
                         navController.popBackStack()
@@ -87,28 +87,4 @@ fun SelectExerciseView(navController: NavController, strengthTrainingViewModel: 
                 }
         }
     }
-}
-
-
-
-
-
-
-@Composable
-fun ExerciseItem(title: String, onClick: () -> Unit = {}){
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp )
-            .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
-            .padding(10.dp)
-            .height(30.dp)
-            .fillMaxWidth()
-            .clickable { onClick() },
-        contentAlignment = androidx.compose.ui.Alignment.Center,
-    ){
-        Row(){
-            Text(title)
-        }
-    }
-
 }
