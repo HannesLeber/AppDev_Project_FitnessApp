@@ -54,13 +54,12 @@ import com.example.appdev_project_fitnessapp.ViewModel.StrengthTrainingViewModel
 @Composable
 fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewModel: StrengthTrainingViewModel ){
 
-    //TODO: add variables (trainingsessions)
     var showDialog by remember { mutableStateOf(false) }
     val trainingSessions = remember {strengthTrainingViewModel.trainingSessions}
     var sessionToDelete by remember { mutableStateOf<TrainingSession?>(null) }
 
     LaunchedEffect(Unit) {
-        //TODO: get Variables from DB
+
         strengthTrainingViewModel.loadData()
         trainingSessions.clear()
         trainingSessions.addAll(strengthTrainingViewModel.trainingSessions)
@@ -141,11 +140,10 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
             }
         }
     ) { innerPadding ->
-        //TODO: add content
         Column(modifier = Modifier
             .padding(innerPadding)
         ){
-            Text(stringResource(id = R.string.strength_training))
+
             LazyColumn(modifier = Modifier
                 .fillMaxSize()
             ) {
@@ -194,7 +192,7 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
                     }
                 }
 
-                //TODO: add other items
+
             }
         }
 
@@ -207,7 +205,7 @@ fun StrengthTrainingView(navController: NavHostController, strengthTrainingViewM
 @Composable
 fun TrainingSessionItem(title: String, icon: ImageVector, id: Int, onClick: () -> Unit = {}){
     Box(
-        //TODO: make clickable and add navigation on click
+
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp )
             .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))

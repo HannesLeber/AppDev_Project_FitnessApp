@@ -108,7 +108,7 @@ fun AppNavigation(
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = "home") {
-        //TODO: add screens
+        //add screens here:
         composable("home") { HomeScreen(navController) }
         composable("strengthTraining") {
             StrengthTrainingView(

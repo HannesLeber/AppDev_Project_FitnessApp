@@ -73,6 +73,7 @@ fun EditDoneExerciseView(navController: NavHostController, strengthTrainingViewM
 
     LaunchedEffect(Unit) {
         strengthTrainingViewModel.getSetsByIDs(setIDs)
+        strengthTrainingViewModel.getPrSetByExerciseID(doneExerciseToBeEdited.exerciseID)
         sets = strengthTrainingViewModel.sets
     }
 
@@ -128,11 +129,19 @@ fun EditDoneExerciseView(navController: NavHostController, strengthTrainingViewM
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
+            val currentPrSet = strengthTrainingViewModel.currentPrSet.value
+            Text(
+                text = currentPrSet?.let { "PR: ${it.reps} x ${it.weight} kg" } ?: "PR: -",
+                fontSize = 20.sp
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(strengthTrainingViewModel.sets, key = { it.id }) { set ->
                     val dismissState = rememberSwipeToDismissBoxState(
                         confirmValueChange = {
                             if (it == SwipeToDismissBoxValue.StartToEnd) {
+                                setIDs = setIDs.filter { setID -> setID != set.id }
+                                doneExerciseToBeEdited.sets = setIDs
                                 strengthTrainingViewModel.sets.remove(set)
                                 strengthTrainingViewModel.deleteSet(set, doneExerciseToBeEdited)
                                 true
@@ -169,7 +178,7 @@ fun EditDoneExerciseView(navController: NavHostController, strengthTrainingViewM
                         enableDismissFromEndToStart = false
                     ) {
                         SetItem(
-                            doneExerciseToBeEdited.exerciseID.toString(),
+                            doneExerciseToBeEdited.exerciseID,
                             Icons.Default.Add,
                             set,
                             strengthTrainingViewModel)
@@ -183,7 +192,7 @@ fun EditDoneExerciseView(navController: NavHostController, strengthTrainingViewM
 
 @Composable
 fun SetItem(
-    title: String,
+    exerciseID: Int,
     icon: ImageVector,
     set: ExerciseSet,
     strengthTrainingViewModel: StrengthTrainingViewModel
@@ -204,7 +213,7 @@ fun SetItem(
                 set.reps = setReps
                 set.weight = setWeight
                 Log.d("SetItem", "set weight to ${set.weight} from $setWeight")
-                strengthTrainingViewModel.updateSet(set)
+                strengthTrainingViewModel.updateSet(set, exerciseID)
                 Log.d("EditDoneExerciseView", "ON_STOP")
             }
         }
@@ -217,7 +226,6 @@ fun SetItem(
     }
 
     Box(
-        //TODO: make clickable and add navigation on click
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable {

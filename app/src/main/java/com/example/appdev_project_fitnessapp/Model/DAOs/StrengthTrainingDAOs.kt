@@ -12,7 +12,7 @@ import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
 import java.util.Date
 
-//TODO: Update-Funktionen schreiben! Aber nicht löschen und dann neu hinzufügen, sonst Problem mit den IDs
+
 @Dao
 interface TrainingSessionDao {
     @Query("SELECT * FROM TrainingSession ORDER BY id DESC")
@@ -54,6 +54,9 @@ interface DoneExerciseDao {
     @Query("SELECT * FROM DoneExercise WHERE id = :id")
     suspend fun findById(id: Int): DoneExercise
 
+    @Query("SELECT * FROM DoneExercise WHERE exerciseID = :exerciseID")
+    suspend fun findByExerciseID(exerciseID: Int): List<DoneExercise>
+
     @Insert
     suspend fun insert(doneExercise: DoneExercise): Long
 
@@ -89,6 +92,9 @@ interface ExerciseDao {
 
     @Delete
     suspend fun delete(exercise: Exercise)
+
+    @Query("UPDATE Exercise SET prSetID = :newPrSetID WHERE id = :id")
+    suspend fun updatePrSetID(id: Int, newPrSetID: Int?)
 }
 
 @Dao

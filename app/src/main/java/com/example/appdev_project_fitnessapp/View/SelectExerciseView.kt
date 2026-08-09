@@ -67,7 +67,7 @@ fun SelectExerciseView(navController: NavController, strengthTrainingViewModel: 
             }
         }
     ) { innerPadding ->
-        //TODO: add content
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -97,7 +97,6 @@ fun SelectExerciseView(navController: NavController, strengthTrainingViewModel: 
 @Composable
 fun ExerciseItem(title: String, icon: ImageVector, id: Int, onClick: () -> Unit = {}){
     Box(
-        //TODO: make clickable and add navigation on click
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp )
             .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
