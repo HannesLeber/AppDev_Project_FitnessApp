@@ -18,7 +18,7 @@ interface TrainingSessionDao {
     @Query("SELECT * FROM TrainingSession ORDER BY id DESC")
     suspend fun getAll(): List<TrainingSession>
 
-    @Query("SELECT * FROM TrainingSession WHERE id IN (:trainingSessionIds)")
+    @Query("SELECT * FROM TrainingSession WHERE id IN (:trainingSessionIds) ORDER BY id DESC")
     suspend fun loadAllByIds(trainingSessionIds: IntArray): List<TrainingSession>
 
     @Query("SELECT * FROM TrainingSession WHERE id = :id")
@@ -48,7 +48,7 @@ interface DoneExerciseDao {
     @Query("SELECT * FROM DoneExercise ORDER BY id DESC")
     suspend fun getAll(): List<DoneExercise>
 
-    @Query("SELECT * FROM DoneExercise WHERE id IN (:doneExerciseIds) ")
+    @Query("SELECT * FROM DoneExercise WHERE id IN (:doneExerciseIds) ORDER BY id DESC")
     suspend fun loadAllByIds(doneExerciseIds: IntArray): List<DoneExercise>
 
     @Query("SELECT * FROM DoneExercise WHERE id = :id")
@@ -75,7 +75,7 @@ interface ExerciseDao {
     @Query("SELECT * FROM Exercise ORDER BY id DESC")
     suspend fun getAll(): List<Exercise>
 
-    @Query("SELECT * FROM Exercise WHERE id IN (:exerciseIds)")
+    @Query("SELECT * FROM Exercise WHERE id IN (:exerciseIds) ORDER BY id DESC")
     suspend fun loadAllByIds(exerciseIds: IntArray): List<Exercise>
 
     @Query("SELECT * FROM Exercise WHERE id = :id")
@@ -116,12 +116,15 @@ interface SetDao {
 
     @Delete
     suspend fun delete(set: ExerciseSet)
+
+    @Query("UPDATE ExerciseSet SET reps = :newReps, weight = :newWeight, warmUpSet = :newWarmupSet WHERE id = :id")
+    suspend fun update(id: Int, newReps: String, newWeight: String, newWarmupSet: Boolean)
 }
 
 
 @Dao
 interface TrainingTemplateDao {
-    @Query("SELECT * FROM TrainingTemplate")
+    @Query("SELECT * FROM TrainingTemplate ORDER BY id DESC")
     suspend fun getAll(): List<TrainingTemplate>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

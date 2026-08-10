@@ -114,6 +114,8 @@ fun EditDoneExerciseView(navController: NavHostController, strengthTrainingViewM
                 scope.launch(){
                     val setID = strengthTrainingViewModel.insertSet(ExerciseSet(reps= "0" ,weight = "0.0", warmupSet = false))
                     setIDs += setID
+                    doneExerciseToBeEdited.sets = setIDs
+                    strengthTrainingViewModel.updateDoneExercise(doneExerciseToBeEdited)
                     strengthTrainingViewModel.getSetsByIDs(setIDs)
                     sets = strengthTrainingViewModel.sets
                     Log.d("EditDoneExerciseView", "sets: $sets")
@@ -200,8 +202,8 @@ fun SetItem(
 
     var setReps by remember { mutableStateOf(set.reps) }
     var setWeight by remember { mutableStateOf(set.weight) }
+    var setWarmupSet by remember { mutableStateOf(set.warmupSet) }
     Log.d("SetItem", "set weight to $setWeight")
-    var backGroundColor by remember { mutableStateOf(if (set.warmupSet) Color.Green else Color.Gray) }
     var textFielsFontSize = 20.sp
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -212,6 +214,7 @@ fun SetItem(
                 //save Values
                 set.reps = setReps
                 set.weight = setWeight
+                set.warmupSet = setWarmupSet
                 Log.d("SetItem", "set weight to ${set.weight} from $setWeight")
                 strengthTrainingViewModel.updateSet(set, exerciseID)
                 Log.d("EditDoneExerciseView", "ON_STOP")
@@ -229,15 +232,11 @@ fun SetItem(
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable {
-                set.warmupSet = !set.warmupSet
-                if (set.warmupSet) {
-                    backGroundColor = Color.Green
-                } else {
-                    backGroundColor = Color.Gray
-                }
+                setWarmupSet = !setWarmupSet
+                set.warmupSet = setWarmupSet
 
             }
-            .background(color = backGroundColor, shape = RoundedCornerShape(16.dp))
+            .background(color = if (setWarmupSet) Color.Green else Color.Gray, shape = RoundedCornerShape(16.dp))
             .padding(20.dp)
             .fillMaxWidth()
             ,
