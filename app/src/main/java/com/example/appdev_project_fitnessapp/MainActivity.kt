@@ -30,9 +30,11 @@ import com.example.appdev_project_fitnessapp.View.EditStrengthTrainingSessionVie
 import com.example.appdev_project_fitnessapp.View.Reminders.ReminderScreen
 import com.example.appdev_project_fitnessapp.View.SelectExerciseView
 import com.example.appdev_project_fitnessapp.View.StepCounterScreen
+import com.example.appdev_project_fitnessapp.View.WeightScreen
 import com.example.appdev_project_fitnessapp.ViewModel.ReminderViewModel
 import com.example.appdev_project_fitnessapp.ViewModel.StepCounterViewModel
 import com.example.appdev_project_fitnessapp.ViewModel.StrengthTrainingViewModel
+import com.example.appdev_project_fitnessapp.ViewModel.WeightViewModel
 import com.example.appdev_project_fitnessapp.ui.theme.AppDev_Project_FitnessAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -103,7 +105,8 @@ fun AppNavigation(
     innerPadding: PaddingValues,
     strengthTrainingViewModel: StrengthTrainingViewModel = viewModel(factory = StrengthTrainingViewModel.Factory),
     reminderViewModel: ReminderViewModel = viewModel(factory = ReminderViewModel.Factory),
-    stepCounterViewModel: StepCounterViewModel = viewModel(factory = StepCounterViewModel.Factory)
+    stepCounterViewModel: StepCounterViewModel = viewModel(factory = StepCounterViewModel.Factory),
+    weightViewModel: WeightViewModel = viewModel(factory = WeightViewModel.Factory)
     ){
     val navController = rememberNavController()
 
@@ -130,6 +133,7 @@ fun AppNavigation(
         }
         composable("reminders") { ReminderScreen(navController, reminderViewModel) }
         composable("stepCounter") { StepCounterScreen(navController, stepCounterViewModel) }
+        composable("weight") { WeightScreen(navController, weightViewModel) }
         composable("selectExercise") {
             SelectExerciseView(
                 navController,

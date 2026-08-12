@@ -12,6 +12,7 @@ import com.example.appdev_project_fitnessapp.Model.DAOs.ReminderDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.SetDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.TrainingSessionDao
 import com.example.appdev_project_fitnessapp.Model.DAOs.TrainingTemplateDao
+import com.example.appdev_project_fitnessapp.Model.DAOs.WeightDao
 import com.example.appdev_project_fitnessapp.Model.DataClasses.DailyStepData
 import com.example.appdev_project_fitnessapp.Model.DataClasses.DoneExercise
 import com.example.appdev_project_fitnessapp.Model.DataClasses.Exercise
@@ -19,6 +20,7 @@ import com.example.appdev_project_fitnessapp.Model.DataClasses.ExerciseSet
 import com.example.appdev_project_fitnessapp.Model.DataClasses.Reminder
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingSession
 import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
+import com.example.appdev_project_fitnessapp.Model.DataClasses.WeightEntry
 
 @Database(
         entities = [
@@ -28,9 +30,10 @@ import com.example.appdev_project_fitnessapp.Model.DataClasses.TrainingTemplate
         ExerciseSet::class,
         TrainingTemplate::class,
         Reminder::class,
-        DailyStepData::class
+        DailyStepData::class,
+        WeightEntry::class
      ],
-        version = 8,
+        version = 9,
         exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -42,6 +45,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun trainingTemplateDao(): TrainingTemplateDao
     abstract fun reminderDao(): ReminderDao
     abstract fun dailyStepDao(): DailyStepDao
+    abstract fun weightDao(): WeightDao
 
 
 

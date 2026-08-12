@@ -18,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -97,6 +98,17 @@ fun HomeScreen(navController: NavHostController){
                     icon = { Icon(Icons.AutoMirrored.Filled.DirectionsWalk, contentDescription = null) },
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
+                NavigationDrawerItem(
+                    label = { Text("Weight") },
+                    selected = false,
+                    onClick = {
+                        scope.launch { drawerState.close() }
+                        navController.navigate("weight")
+                    },
+                    icon = { Icon(Icons.Default.MonitorWeight, contentDescription = null) },
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
+                //TODO: add other Items (settings etc.)
             }
         }
     ){
@@ -117,6 +129,7 @@ fun HomeScreen(navController: NavHostController){
                 )
             }
         ) { innerPadding ->
+            //TODO: add content
             Column(modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -137,7 +150,13 @@ fun HomeScreen(navController: NavHostController){
                             navController.navigate("stepCounter")
                         })
                     }
-                    //add other items here
+                    item{
+                        homePageNavigationItem("Weight", Icons.Default.MonitorWeight, onClick = {
+                            scope.launch { drawerState.close() }
+                            navController.navigate("weight")
+                        })
+                    }
+                    //TODO: add other items
                 }
 
             }
@@ -152,6 +171,7 @@ fun HomeScreen(navController: NavHostController){
 @Composable
 fun homePageNavigationItem(title:String, icon: ImageVector, onClick: () -> Unit = {}){
     Box(
+        //TODO: make clickable and add navigation on click
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp )
             .background(color = Color.Gray, shape = RoundedCornerShape(16.dp))
