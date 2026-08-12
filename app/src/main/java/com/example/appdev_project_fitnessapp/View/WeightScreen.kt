@@ -46,7 +46,6 @@ import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeightScreen(
@@ -55,14 +54,14 @@ fun WeightScreen(
 ) {
     val entries by viewModel.entries.collectAsState()
 
-    val bmiPreview = entries.firstOrNull()?.getBMI()
-    val weightPreview = entries.first().weightKg
-    val heightPreview = entries.first().heightCm
+    val latestEntry = entries.maxByOrNull { it.timestamp }
 
+    val bmiPreview = latestEntry?.getBMI()
+    val weightPreview = latestEntry?.weightKg ?: 0.0
+    val heightPreview = latestEntry?.heightCm ?: 0.0
 
     var weight by remember { mutableStateOf("") }
-    var height by remember { mutableStateOf(heightPreview.toString() ?: "") }
-
+    var height by remember { mutableStateOf(heightPreview.toString()) }
 
     Scaffold(
         topBar = {
@@ -94,31 +93,38 @@ fun WeightScreen(
                     style = MaterialTheme.typography.titleLarge
                 )
             }
-            item {
-             Row(
-                 horizontalArrangement = Arrangement.spacedBy(12.dp)
-             ) {
-                 Text(
-                     text = "Weight: ${weightPreview.oneDecimal()} kg"
-                 )
-                 bmiPreview?.let {
-                     Text(
-                         text = "BMI: ${it.oneDecimal()} (${bmiText(bmiPreview)})"
-                     )
-                 }
-             }
-            }
 
+            item {
+                if (latestEntry != null) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "Weight: ${weightPreview.oneDecimal()} kg"
+                        )
+
+                        bmiPreview?.let {
+                            Text(
+                                text = "BMI: ${it.oneDecimal()} (${bmiText(it)})"
+                            )
+                        }
+                    }
+                } else {
+                    Text("No weight entries yet")
+                }
+            }
 
             item {
                 WeightChartCard(entries = entries)
             }
+
             item {
                 Text(
                     text = "History",
                     style = MaterialTheme.typography.titleLarge
                 )
             }
+
             item {
                 WeightInput(
                     weight = weight,
@@ -128,6 +134,7 @@ fun WeightScreen(
                     onSave = {
                         val toSaveWeight = weight.toDoubleOrNull()
                         val toSaveHeight = height.toDoubleOrNull()
+
                         if (toSaveWeight != null && toSaveHeight != null) {
                             viewModel.addEntry(toSaveWeight, toSaveHeight)
                             weight = ""
@@ -151,7 +158,6 @@ fun WeightScreen(
         }
     }
 }
-
 @Composable
 private fun WeightInput(
     weight: String,
