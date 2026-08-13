@@ -53,6 +53,14 @@ class StepRepository(
         dailyStepDao.insertOrUpdate(newData)
     }
 
+    suspend fun updateTodayGoal(goal: Int) {
+        val today = normalizeDate(Date())
+        val existing = dailyStepDao.getStepsForDate(today)
+        if (existing != null) {
+            dailyStepDao.insertOrUpdate(existing.copy(target = goal))
+        }
+    }
+
     private fun normalizeDate(date: Date): Date {
         val calendar = Calendar.getInstance()
         calendar.time = date

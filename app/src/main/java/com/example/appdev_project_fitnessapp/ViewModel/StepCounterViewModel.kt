@@ -42,6 +42,7 @@ class StepCounterViewModel(private val repository: StepRepository) : ViewModel()
     fun updateGoal(goal: Int) {
         viewModelScope.launch {
             repository.saveGoal(goal)
+            repository.updateTodayGoal(goal)
             _goal.value = goal
         }
     }

@@ -72,7 +72,7 @@ fun StepCounterScreen(
             item {
                 StepProgressRing(
                     steps = todayData?.steps ?: 0,
-                    target = todayData?.target ?: 10000
+                    target = goal
                 )
                 Spacer(modifier = Modifier.height(32.dp))
             }
