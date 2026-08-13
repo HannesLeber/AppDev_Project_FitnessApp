@@ -6,6 +6,8 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,10 +33,33 @@ fun StepCounterScreen(
 ) {
     val todayData by viewModel.todaySteps.collectAsState()
     val history by viewModel.historySteps.collectAsState()
+    val goal by viewModel.goal.collectAsState()
+    val reminderSettings by viewModel.reminderSettings.collectAsState()
+    var showGoalDialog by remember { mutableStateOf(false) }
+
+    if (showGoalDialog) {
+        StepGoalAndReminderDialog(
+            currentGoal = goal,
+            currentReminderSettings = reminderSettings,
+            onDismiss = { showGoalDialog = false },
+            onSave = { newGoal, enabled, hour, minute ->
+                viewModel.updateGoal(newGoal)
+                viewModel.updateReminder(enabled, hour, minute)
+                showGoalDialog = false
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Schrittzähler") })
+            TopAppBar(
+                title = { Text("Schrittzähler") },
+                actions = {
+                    IconButton(onClick = { showGoalDialog = true }) {
+                        Icon(Icons.Default.Settings, contentDescription = "Ziel & Erinnerung")
+                    }
+                }
+            )
         }
     ) { paddingValues ->
         LazyColumn(
