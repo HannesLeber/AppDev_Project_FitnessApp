@@ -40,9 +40,9 @@ class StepCounterService : Service(), SensorEventListener {
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
         
         val database = AppDatabase.getDatabase(this)
-        repository = StepRepository(database.dailyStepDao())
-        
-        prefs = getSharedPreferences("step_counter_prefs", Context.MODE_PRIVATE)
+        repository = StepRepository(database.dailyStepDao(), this)
+
+        prefs = getSharedPreferences(StepRepository.PREFS_NAME, Context.MODE_PRIVATE)
         
         // Letzten bekannten Stand laden
         stepsAtStartOfDay = prefs.getInt("steps_at_start_of_day", -1)
@@ -88,18 +88,22 @@ class StepCounterService : Service(), SensorEventListener {
                lastCalendar.get(Calendar.YEAR) != nowCalendar.get(Calendar.YEAR)
     }
 
+    private fun currentGoal(): Int {
+        return prefs.getInt(StepRepository.KEY_DAILY_GOAL, StepRepository.DEFAULT_GOAL)
+    }
+
     private fun updateSteps(steps: Int) {
         serviceScope.launch {
-            repository.updateSteps(steps, 10000) // 10000 ist Default Ziel
+            repository.updateSteps(steps, currentGoal())
             updateNotification(steps)
-            
+
             prefs.edit().putLong("last_update_date", System.currentTimeMillis()).apply()
         }
     }
 
     private fun resetDailyStepsInDb() {
         serviceScope.launch {
-            repository.updateSteps(0, 10000)
+            repository.updateSteps(0, currentGoal())
         }
     }
 
