@@ -97,21 +97,32 @@ fun ReminderScreen(
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            item {
+                Text(
+                    "Create your own reminders or use provided templates. ",
+                    style = MaterialTheme.typography.titleLarge
+
+                )
+            }
             categories.forEach { category ->
                 item {
                     ReminderCategorySection(
                         category = category,
-                        reminders = reminders.filter { it.category == category.id },
-                        expanded = expandedCategories[category.id] == true,
+                        reminders = reminders.filter { it.category == category.category },
+                        expanded = expandedCategories[category.category] == true,
                         onHeaderClick = {
-                            expandedCategories[category.id] = expandedCategories[category.id] != true
+                            expandedCategories[category.category] = expandedCategories[category.category] != true
                         },
                         onEdit = { reminder ->
                             dialogReminder = reminder
                             showDialog = true
                         },
-                        onSave = viewModel::addReminder,
-                        onDelete = viewModel::deleteReminder,
+                        onSave = {
+                            reminder -> viewModel.addReminder(reminder)
+                        },
+                        onDelete = {
+                            reminder -> viewModel.deleteReminder(reminder)
+                        },
                         onToggleNotification = { reminder ->
                             viewModel.updateReminder(reminder.copy(enabled = !reminder.enabled))
                         }
@@ -147,7 +158,7 @@ private fun ReminderCategorySection(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHighest
         )
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
@@ -186,14 +197,14 @@ private fun ReminderCategorySection(
                     modifier = Modifier.padding(top = 12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    category.templates.forEach { template ->
-                        val savedReminder = reminders.firstOrNull { it.title == template.title }
+                    category.reminders.forEach { reminder ->
+                        val savedReminder = reminders.firstOrNull { it.title == reminder.title }
 
                         if (savedReminder == null) {
                             ReminderTemplateCard(
-                                reminder = template,
-                                onAdd = { onSave(template) },
-                                onEdit = { onEdit(template) }
+                                reminder = reminder,
+                                onAdd = { onSave(reminder) },
+                                onEdit = { onEdit(reminder) }
                             )
                         } else {
                             ReminderCard(
@@ -206,7 +217,7 @@ private fun ReminderCategorySection(
                     }
 
                     reminders
-                        .filterNot { saved -> category.templates.any { it.title == saved.title } }
+                        .filterNot { saved -> category.reminders.any { it.title == saved.title } }
                         .forEach { reminder ->
                             ReminderCard(
                                 reminder = reminder,
@@ -230,7 +241,7 @@ private fun ReminderTemplateCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         )
     ) {
         Column(
@@ -279,11 +290,10 @@ private fun ReminderCard(
                         text = reminder.title,
                         style = MaterialTheme.typography.titleMedium
                     )
-                    Text(reminder.message)
+                    Text(reminder.message.ifEmpty { "No message added" })
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Notifications")
                     Switch(
                         checked = reminder.enabled,
                         onCheckedChange = { onToggleNotification() }
@@ -306,23 +316,25 @@ private fun ReminderCard(
 }
 
 private data class ReminderCategory(
-    val id: String,
+    val category: String,
     val title: String,
     val emptyText: String,
-    val templates: List<Reminder>
+    val reminders: List<Reminder>
 ) {
     fun subtitle(totalCount: Int, enabledCount: Int): String {
-        return if (totalCount == 0) emptyText else "$enabledCount enabled / $totalCount total"
+        return emptyText +
+                if(totalCount != 0) "\n$enabledCount enabled / $totalCount total"
+                else ""
     }
 }
 
 private fun reminderCategories(): List<ReminderCategory> {
     return listOf(
         ReminderCategory(
-            id = "WATER",
+            category = "WATER",
             title = "Water",
             emptyText = "Hydration reminders",
-            templates = listOf(
+            reminders = listOf(
                 reminderTemplate(
                     title = "Drink Water",
                     message = "Time to drink a glass of water",
@@ -336,10 +348,10 @@ private fun reminderCategories(): List<ReminderCategory> {
             )
         ),
         ReminderCategory(
-            id = "SUPPLEMENTS",
+            category = "SUPPLEMENTS",
             title = "Supplements",
             emptyText = "Daily supplement reminders",
-            templates = listOf(
+            reminders = listOf(
                 reminderTemplate(
                     title = "Morning Supplements",
                     message = "Take your morning supplements",
@@ -364,10 +376,10 @@ private fun reminderCategories(): List<ReminderCategory> {
             )
         ),
         ReminderCategory(
-            id = "TRAINING",
+            category = "TRAINING",
             title = "Training",
             emptyText = "Training plan reminders",
-            templates = listOf(
+            reminders = listOf(
                 reminderTemplate(
                     title = "Training Plan",
                     message = "Time for your planned training session",
