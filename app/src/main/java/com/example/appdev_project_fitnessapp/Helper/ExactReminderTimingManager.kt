@@ -33,7 +33,7 @@ object ExactReminderTimingManager {
             TYPE_WINDOWED_INTERVAL -> {
                 "Every ${reminder.interval} ${reminder.unit.lowercase()} from ${reminder.startHour.timePart()}:00 to ${reminder.endHour.timePart()}:00"
             }
-            else -> "Every ${reminder.interval} ${reminder.unit}"
+            else -> "Every ${reminder.interval} ${reminder.unit.lowercase()}"
         }
 
         return if (days.isBlank()) timing else "$timing on $days"

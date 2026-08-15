@@ -72,7 +72,7 @@ fun AddReminderDialog(
                 )
 
                 Text("Category")
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
                     listOf(
                         "WATER" to "Water",
                         "SUPPLEMENTS" to "Supplements",
@@ -96,118 +96,109 @@ fun AddReminderDialog(
                         onCheckedChange = { enabled = it }
                     )
                 }
+                if (enabled) {
 
-                ScheduleTypeOption(
-                    selected = scheduleType == ExactReminderTimingManager.TYPE_INTERVAL,
-                    onClick = { scheduleType = ExactReminderTimingManager.TYPE_INTERVAL },
-                    text = "Every interval"
-                )
-
-                ScheduleTypeOption(
-                    selected = scheduleType == ExactReminderTimingManager.TYPE_DAILY_AT_TIME,
-                    onClick = { scheduleType = ExactReminderTimingManager.TYPE_DAILY_AT_TIME },
-                    text = "Daily at exact time"
-                )
-
-                ScheduleTypeOption(
-                    selected = scheduleType == ExactReminderTimingManager.TYPE_WINDOWED_INTERVAL,
-                    onClick = { scheduleType = ExactReminderTimingManager.TYPE_WINDOWED_INTERVAL },
-                    text = "From start to end"
-                )
-
-                if (scheduleType != ExactReminderTimingManager.TYPE_DAILY_AT_TIME) {
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = interval,
-                        onValueChange = { interval = it },
-                        label = { Text("Interval") }
+                    ScheduleTypeOption(
+                        selected = scheduleType == ExactReminderTimingManager.TYPE_INTERVAL,
+                        onClick = { scheduleType = ExactReminderTimingManager.TYPE_INTERVAL },
+                        text = "Every interval"
                     )
 
-                    ExposedDropdownMenuBox(
-                        expanded = expanded,
-                        onExpandedChange = { expanded = !expanded }
-                    ) {
+                    ScheduleTypeOption(
+                        selected = scheduleType == ExactReminderTimingManager.TYPE_DAILY_AT_TIME,
+                        onClick = { scheduleType = ExactReminderTimingManager.TYPE_DAILY_AT_TIME },
+                        text = "Daily at exact time"
+                    )
+
+                    ScheduleTypeOption(
+                        selected = scheduleType == ExactReminderTimingManager.TYPE_WINDOWED_INTERVAL,
+                        onClick = {
+                            scheduleType = ExactReminderTimingManager.TYPE_WINDOWED_INTERVAL
+                        },
+                        text = "From start to end"
+                    )
+
+                    if (scheduleType != ExactReminderTimingManager.TYPE_DAILY_AT_TIME) {
                         OutlinedTextField(
-                            modifier = Modifier
-                                .menuAnchor()
-                                .fillMaxWidth(),
-                            value = unit,
-                            onValueChange = {},
-                            readOnly = true,
-                            label = { Text("Unit") }
+                            modifier = Modifier.fillMaxWidth(),
+                            value = interval,
+                            onValueChange = { interval = it },
+                            label = { Text("Interval") }
                         )
 
-                        ExposedDropdownMenu(
+                        ExposedDropdownMenuBox(
                             expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                            onExpandedChange = { expanded = !expanded }
                         ) {
-                            listOf("MINUTES", "HOURS", "DAYS").forEach { item ->
-                                DropdownMenuItem(
-                                    text = { Text(item) },
-                                    onClick = {
-                                        unit = item
-                                        expanded = false
-                                    }
-                                )
+                            OutlinedTextField(
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                value = unit,
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text("Unit") }
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                listOf("MINUTES", "HOURS", "DAYS").forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(item) },
+                                        onClick = {
+                                            unit = item
+                                            expanded = false
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                if (scheduleType == ExactReminderTimingManager.TYPE_DAILY_AT_TIME) {
-                    Row {
-                        OutlinedTextField(
-                            modifier = Modifier.weight(1f),
-                            value = hour,
-                            onValueChange = { hour = it },
-                            label = { Text("Hour") }
-                        )
+                    if (scheduleType == ExactReminderTimingManager.TYPE_DAILY_AT_TIME) {
+                        Row {
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = hour,
+                                onValueChange = { hour = it },
+                                label = { Text("Hour") }
+                            )
 
-                        OutlinedTextField(
-                            modifier = Modifier.weight(1f),
-                            value = minute,
-                            onValueChange = { minute = it },
-                            label = { Text("Minute") }
-                        )
-                    }
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = minute,
+                                onValueChange = { minute = it },
+                                label = { Text("Minute") }
+                            )
+                        }
 
-                    WeekdaySelector(
-                        selectedWeekdays = weekdays,
-                        onSelectedWeekdaysChange = { weekdays = it }
-                    )
-                }
-
-                if (scheduleType == ExactReminderTimingManager.TYPE_WINDOWED_INTERVAL) {
-                    Row {
-                        OutlinedTextField(
-                            modifier = Modifier.weight(1f),
-                            value = startHour,
-                            onValueChange = { startHour = it },
-                            label = { Text("Start hour") }
-                        )
-
-                        OutlinedTextField(
-                            modifier = Modifier.weight(1f),
-                            value = endHour,
-                            onValueChange = { endHour = it },
-                            label = { Text("End hour") }
+                        WeekdaySelector(
+                            selectedWeekdays = weekdays,
+                            onSelectedWeekdaysChange = { weekdays = it }
                         )
                     }
-                }
 
-                if (scheduleType == ExactReminderTimingManager.TYPE_INTERVAL) {
-                    Row {
-                        FilterChip(
-                            selected = unit == "HOURS",
-                            onClick = { unit = "HOURS" },
-                            label = { Text("Hours") }
-                        )
-                        FilterChip(
-                            selected = unit == "DAYS",
-                            onClick = { unit = "DAYS" },
-                            label = { Text("Days") }
-                        )
+                    if (scheduleType == ExactReminderTimingManager.TYPE_WINDOWED_INTERVAL) {
+                        Row {
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = startHour,
+                                onValueChange = { startHour = it },
+                                label = { Text("Start hour") }
+                            )
+
+                            OutlinedTextField(
+                                modifier = Modifier.weight(1f),
+                                value = endHour,
+                                onValueChange = { endHour = it },
+                                label = { Text("End hour") }
+                            )
+                        }
                     }
+
+
                 }
             }
         },
