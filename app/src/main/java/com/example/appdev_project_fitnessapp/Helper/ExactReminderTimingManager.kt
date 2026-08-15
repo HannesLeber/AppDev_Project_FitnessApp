@@ -5,6 +5,7 @@ import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
+import kotlin.text.lowercase
 
 object ExactReminderTimingManager {
 
@@ -12,11 +13,8 @@ object ExactReminderTimingManager {
     const val TYPE_DAILY_AT_TIME = "DAILY_AT_TIME"
     const val TYPE_WINDOWED_INTERVAL = "WINDOWED_INTERVAL"
 
-    fun calculateInitialDelayMillis(reminder: Reminder): Long {
-        return calculateNextDelayMillis(reminder, LocalDateTime.now())
-    }
-
-    fun calculateNextDelayMillis(reminder: Reminder, now: LocalDateTime): Long {
+    fun calculateDelayMillis(reminder: Reminder): Long {
+        val now = LocalDateTime.now()
         val nextTime = when (reminder.scheduleType) {
             TYPE_DAILY_AT_TIME -> nextDailyTime(now, reminder)
             TYPE_WINDOWED_INTERVAL -> nextWindowedIntervalTime(now, reminder)
@@ -31,9 +29,9 @@ object ExactReminderTimingManager {
         val timing = when (reminder.scheduleType) {
             TYPE_DAILY_AT_TIME -> "Daily at ${reminder.hour.timePart()}:${reminder.minute.timePart()}"
             TYPE_WINDOWED_INTERVAL -> {
-                "Every ${reminder.interval} ${reminder.unit.lowercase()} from ${reminder.startHour.timePart()}:00 to ${reminder.endHour.timePart()}:00"
+                reminder.everyToString() + " from ${reminder.startHour.timePart()}:00 to ${reminder.endHour.timePart()}:00"
             }
-            else -> "Every ${reminder.interval} ${reminder.unit.lowercase()}"
+            else -> reminder.everyToString()
         }
 
         return if (days.isBlank()) timing else "$timing on $days"
@@ -115,9 +113,12 @@ object ExactReminderTimingManager {
             .joinToString(", ") { day -> day.name.take(3).lowercase().replaceFirstChar { it.uppercase() } }
     }
 
+    private fun Reminder.everyToString(): String {
+        val unit = if(interval == 1L) unit.lowercase().substring(0, unit.length -1) else unit.lowercase()
+        return "Every $interval $unit"
+    }
     private fun LocalDateTime.dayMatches(weekdays: Set<DayOfWeek>): Boolean {
         return weekdays.isEmpty() || dayOfWeek in weekdays
     }
-
     private fun Int.timePart(): String = toString().padStart(2, '0')
 }

@@ -111,7 +111,7 @@ class StepRepository(
 
         val request = OneTimeWorkRequestBuilder<StepReminderWorker>()
             .setInitialDelay(
-                ExactReminderTimingManager.calculateInitialDelayMillis(timingReminder),
+                ExactReminderTimingManager.calculateDelayMillis(timingReminder),
                 java.util.concurrent.TimeUnit.MILLISECONDS
             )
             .setInputData(

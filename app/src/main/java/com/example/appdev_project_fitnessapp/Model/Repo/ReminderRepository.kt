@@ -50,7 +50,7 @@ class ReminderRepository(
 
         val request = OneTimeWorkRequestBuilder<ReminderWorker>()
             .setInitialDelay(
-                ExactReminderTimingManager.calculateInitialDelayMillis(reminder),
+                ExactReminderTimingManager.calculateDelayMillis(reminder),
                 java.util.concurrent.TimeUnit.MILLISECONDS
             )
             .setInputData(
