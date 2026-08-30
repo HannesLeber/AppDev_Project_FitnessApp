@@ -13,3 +13,13 @@ Bei jeder Übung wird außerdem die PR ("Persönliche Bestleistung" / "Personal 
 ## Ausdauertraining
 
 ## Schritte
+
+
+
+
+
+## Benachrichtigung
+User hat die Möglichkeit, eigene Benachrichtigung zu erstellen und verwalten. Dies umfasst folgende Kategorien wie Wasser, Supplements und Training, die wichtigsten für Sport App. Unterstützt werden Benachrichtigungen zu einer bestimmten Zeit an jeden/bestimmten Tagen oder von-bis alle XX Stunden. 
+
+## Weight Control 
+Um Geweicht unter Kontrolle zu haben, kann User dies ganz einfach eintragen. Gleich wird BMI angezeigt und das Progress kann auf dem Graph angesehen werden.
