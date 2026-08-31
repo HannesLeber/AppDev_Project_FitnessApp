@@ -19,8 +19,10 @@ Auf dem Schrittzähler-Screen sieht man den heutigen Fortschritt als animierten 
 Über ein Einstellungs-Menü können ein individuelles Tagesziel (Standard: 10.000 Schritte) sowie eine tägliche Erinnerung zu einer frei wählbaren Uhrzeit festgelegt werden. Wurde das Tagesziel zur eingestellten Zeit noch nicht erreicht, erhält man eine Benachrichtigung mit der Anzahl der noch fehlenden Schritte.
 
 
-## Benachrichtigung
-User hat die Möglichkeit, eigene Benachrichtigung zu erstellen und verwalten. Dies umfasst folgende Kategorien wie Wasser, Supplements und Training, die wichtigsten für Sport App. Unterstützt werden Benachrichtigungen zu einer bestimmten Zeit an jeden/bestimmten Tagen oder von-bis alle XX Stunden. 
+## Benachrichtigungen
 
-## Weight Control 
-Um Geweicht unter Kontrolle zu haben, kann User dies ganz einfach eintragen. Gleich wird BMI angezeigt und das Progress kann auf dem Graph angesehen werden.
+Der User hat die Möglichkeit, eigene Benachrichtigungen zu erstellen und zu verwalten. Dabei stehen die Kategorien Wasser, Supplements und Training zur Verfügung, die für eine Fitness-App besonders relevant sind. Benachrichtigungen können entweder zu einer bestimmten Uhrzeit an einem oder mehreren ausgewählten Tagen oder in einem frei wählbaren Intervall innerhalb eines bestimmten Zeitraums (von-bis) eingerichtet werden. Bereits erstellte Benachrichtigungen können jederzeit bearbeitet oder gelöscht werden. Bereits vorhandene „Muster“-Optionen können ganz einfach aktiviert werden, ohne die selber erstellen zu müssen.
+
+## Gewichtskontrolle
+
+Bei der Gewichtskontrolle kann der User sein aktuelles Gewicht einfach eintragen und speichern. Auf Basis der eingegebenen Körpergröße und des Gewichts wird automatisch der BMI berechnet und angezeigt. Die gespeicherten Gewichtseinträge werden  in einem Graphen dargestellt, sodass die Entwicklung des Gewichts über einen längeren Zeitraum verfolgt und der persönliche Fortschritt leicht nachvollzogen werden kann.
