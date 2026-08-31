@@ -13,9 +13,10 @@ Bei jeder Übung wird außerdem die PR ("Persönliche Bestleistung" / "Personal 
 ## Ausdauertraining
 
 ## Schritte
-
-
-
+Die Schritte werden über den im Smartphone verbauten Schrittzähler-Sensor erfasst. Ein Foreground-Service läuft im Hintergrund, zählt die Schritte laufend mit und zeigt den aktuellen Stand über eine dauerhafte Benachrichtigung an. Da der Sensor die Schritte seit dem letzten Geräteneustart aufsummiert, merkt sich die App täglich einen Startwert, um daraus die Schritte des jeweiligen Tages zu berechnen; ein Neustart des Geräts wird dabei ebenfalls korrekt abgefangen.
+Aus der Schrittzahl werden zusätzlich die zurückgelegte Strecke (in km) und der ungefähre Kalorienverbrauch geschätzt. Alle Werte werden pro Tag in der Datenbank gespeichert, wodurch neben dem heutigen Fortschritt auch der Verlauf der letzten 7 Tage angezeigt werden kann.
+Auf dem Schrittzähler-Screen sieht man den heutigen Fortschritt als animierten Fortschrittsring im Vergleich zum Tagesziel, darunter die geschätzte Strecke und die verbrannten Kalorien sowie eine Liste der letzten 7 Tage inklusive Zielerreichung in Prozent.
+Über ein Einstellungs-Menü können ein individuelles Tagesziel (Standard: 10.000 Schritte) sowie eine tägliche Erinnerung zu einer frei wählbaren Uhrzeit festgelegt werden. Wurde das Tagesziel zur eingestellten Zeit noch nicht erreicht, erhält man eine Benachrichtigung mit der Anzahl der noch fehlenden Schritte.
 
 
 ## Benachrichtigung
